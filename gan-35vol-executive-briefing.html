@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GaN Defense Capture Architecture — 35-Volume Executive Synthesis</title>
+<style>
+  :root {
+    --bg-base: #06080a;
+    --bg-surface: #0c1015;
+    --bg-card: #121820;
+    --bg-card-hover: #18222d;
+    --border-subtle: #1c2633;
+    --border-accent: #2e3e52;
+    --text-primary: #e6edf3;
+    --text-secondary: #8b949e;
+    --text-muted: #586069;
+    --gold: #f0daa5;
+    --gold-dim: #9a8354;
+    --gold-glow: rgba(240, 218, 165, 0.12);
+    --emerald: #76d7a4;
+    --emerald-dim: #3a7a58;
+    --emerald-glow: rgba(118, 215, 164, 0.12);
+    --crimson: #ff7b72;
+    --crimson-dim: #8b2b2b;
+    --cyan: #79c0ff;
+    --purple: #d2a8ff;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --mono: "SF Mono", "Fira Code", Menlo, Monaco, Consolas, monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background-color: var(--bg-base);
+    color: var(--text-primary);
+    font-family: var(--sans);
+    line-height: 1.6;
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  /* Sidebar */
+  aside {
+    width: 320px;
+    background-color: var(--bg-surface);
+    border-right: 1px solid var(--border-subtle);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+  }
+
+  .sidebar-header {
+    padding: 24px 20px;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .badge-tag {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 3px 8px;
+    border-radius: 4px;
+    background: var(--gold-glow);
+    color: var(--gold);
+    border: 1px solid var(--gold-dim);
+    margin-bottom: 8px;
+  }
+
+  .sidebar-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.01em;
+  }
+
+  .sidebar-sub {
+    font-size: 11px;
+    color: var(--text-secondary);
+    margin-top: 4px;
+    font-family: var(--mono);
+  }
+
+  nav {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px 10px;
+  }
+
+  .nav-group-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    padding: 12px 10px 6px 10px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 6px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    border: 1px solid transparent;
+  }
+
+  .nav-item:hover {
+    background-color: var(--bg-card);
+    color: var(--text-primary);
+  }
+
+  .nav-item.active {
+    background-color: var(--bg-card);
+    color: var(--gold);
+    border-color: var(--border-accent);
+    font-weight: 600;
+  }
+
+  .nav-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-muted);
+    width: 20px;
+    text-align: right;
+  }
+
+  .nav-item.active .nav-num {
+    color: var(--gold);
+  }
+
+  .sidebar-footer {
+    padding: 16px 20px;
+    border-top: 1px solid var(--border-subtle);
+    font-size: 11px;
+    font-family: var(--mono);
+    color: var(--text-muted);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  /* Main */
+  main {
+    flex: 1;
+    overflow-y: auto;
+    padding: 48px 64px;
+    position: relative;
+    background: radial-gradient(circle at top right, rgba(118, 215, 164, 0.03), transparent 40%),
+                radial-gradient(circle at bottom right, rgba(240, 218, 165, 0.03), transparent 40%);
+  }
+
+  .view-pane {
+    display: none;
+    max-width: 980px;
+    margin: 0 auto;
+    animation: fadeIn 0.2s ease-in-out;
+  }
+
+  .view-pane.active {
+    display: block;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .pane-header {
+    margin-bottom: 32px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .pane-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+
+  .pane-num {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--gold);
+    font-weight: 600;
+  }
+
+  .pane-title {
+    font-size: 32px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+  }
+
+  .pane-subtitle {
+    font-size: 15px;
+    color: var(--text-secondary);
+    margin-top: 6px;
+    line-height: 1.5;
+  }
+
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    margin: 24px 0;
+  }
+
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    padding: 22px;
+    transition: all 0.2s ease;
+  }
+
+  .card:hover {
+    border-color: var(--border-accent);
+    background: var(--bg-card-hover);
+  }
+
+  .card-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .card-text {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  .metric-stat {
+    font-family: var(--mono);
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--gold);
+    line-height: 1.2;
+    margin: 8px 0;
+  }
+
+  .metric-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+  }
+
+  .pill {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+  }
+
+  .pill-emerald { background: var(--emerald-glow); color: var(--emerald); border: 1px solid var(--emerald-dim); }
+  .pill-gold { background: var(--gold-glow); color: var(--gold); border: 1px solid var(--gold-dim); }
+  .pill-cyan { background: rgba(121, 192, 255, 0.1); color: var(--cyan); border: 1px solid #23456b; }
+  .pill-purple { background: rgba(210, 168, 255, 0.1); color: var(--purple); border: 1px solid #583b7e; }
+  .pill-crimson { background: rgba(255, 123, 114, 0.1); color: var(--crimson); border: 1px solid var(--crimson-dim); }
+
+  .spec-box {
+    background: #080b0f;
+    border: 1px solid var(--border-subtle);
+    border-radius: 6px;
+    padding: 16px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: #c9d1d9;
+    overflow-x: auto;
+    margin: 16px 0;
+  }
+
+  table.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 13px;
+  }
+
+  table.data-table th {
+    background: var(--bg-surface);
+    color: var(--text-secondary);
+    font-family: var(--mono);
+    font-weight: 600;
+    text-align: left;
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border-accent);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  table.data-table td {
+    padding: 14px;
+    border-bottom: 1px solid var(--border-subtle);
+    color: var(--text-primary);
+  }
+
+  table.data-table tr:hover td {
+    background: rgba(255,255,255,0.015);
+  }
+
+  .callout {
+    border-left: 3px solid var(--gold);
+    background: var(--gold-glow);
+    padding: 18px 20px;
+    border-radius: 0 6px 6px 0;
+    margin: 20px 0;
+  }
+
+  .callout-success { border-left-color: var(--emerald); background: var(--emerald-glow); }
+  .callout-cyan { border-left-color: var(--cyan); background: rgba(121, 192, 255, 0.08); }
+  .callout-alert { border-left-color: var(--crimson); background: rgba(255, 123, 114, 0.08); }
+
+  .callout-title {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 6px;
+    color: var(--gold);
+    font-family: var(--mono);
+  }
+  .callout-success .callout-title { color: var(--emerald); }
+  .callout-cyan .callout-title { color: var(--cyan); }
+  .callout-alert .callout-title { color: var(--crimson); }
+
+  .callout-body { font-size: 13px; color: var(--text-primary); line-height: 1.5; }
+
+  .pagination-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border-subtle);
+  }
+
+  .btn {
+    background: var(--bg-card);
+    border: 1px solid var(--border-accent);
+    color: var(--text-primary);
+    padding: 10px 18px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--sans);
+    transition: all 0.2s ease;
+  }
+
+  .btn:hover {
+    background: var(--bg-card-hover);
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+
+  .btn-gold {
+    background: var(--gold);
+    color: #06080a;
+    border-color: var(--gold);
+  }
+
+  .btn-gold:hover {
+    background: #e2c98e;
+    color: #06080a;
+  }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside>
+  <div class="sidebar-header">
+    <span class="badge-tag">GaN Defense Master Hub</span>
+    <div class="sidebar-title">35-Volume Synthesis</div>
+    <div class="sidebar-sub">Executive Architecture Dossier</div>
+  </div>
+
+  <nav id="sidebar-nav">
+    <div class="nav-group-label">Executive Brief</div>
+    <a class="nav-item active" data-target="v1"><span class="nav-num">01</span> Master Enclave Summary</a>
+    <a class="nav-item" data-target="v2"><span class="nav-num">02</span> The Army Division TOC (Vol 25)</a>
+    <a class="nav-item" data-target="v3"><span class="nav-num">03</span> GaN Asymmetric Moat (Vol 26)</a>
+
+    <div class="nav-group-label">Operational Architecture</div>
+    <a class="nav-item" data-target="v4"><span class="nav-num">04</span> 6-Node Enclave Topology (Vol 18/35)</a>
+    <a class="nav-item" data-target="v5"><span class="nav-num">05</span> RFP Shredding & Triage (Vol 03/30)</a>
+    <a class="nav-item" data-target="v6"><span class="nav-num">06</span> DCAA Cost-Technical Bridge (Vol 23)</a>
+    <a class="nav-item" data-target="v7"><span class="nav-num">07</span> GPU Drafting Furnace (Vol 24/31)</a>
+    <a class="nav-item" data-target="v8"><span class="nav-num">08</span> Adversarial Red Team (Vol 15/32)</a>
+    <a class="nav-item" data-target="v9"><span class="nav-num">09</span> Commander Glass HUD (Vol 16/33)</a>
+
+    <div class="nav-group-label">Security & Intelligence</div>
+    <a class="nav-item" data-target="v10"><span class="nav-num">10</span> SCIF VLAN & Legal Boundaries (Vol 04/10)</a>
+    <a class="nav-item" data-target="v11"><span class="nav-num">11</span> JEV System-One Decision Fabric (Vol 36)</a>
+    <a class="nav-item" data-target="v12"><span class="nav-num">12</span> The Complete 35-Volume Map</a>
+  </nav>
+
+  <div class="sidebar-footer">
+    <span>Team Redstone Enclave</span>
+    <span class="pill pill-emerald">Vol 01–36 Indexed</span>
+  </div>
+</aside>
+
+<!-- MAIN CONTENT -->
+<main id="content-container">
+
+  <!-- PAGE 1: MASTER ENCLAVE SUMMARY -->
+  <section class="view-pane active" id="v1">
+    <div class="pane-header">
+      <div class="pane-meta">
+        <span class="pane-num">VOLUME SYNTHESIS 01</span>
+        <span class="pill pill-gold">EXECUTIVE SUMMARY</span>
+      </div>
+      <h1 class="pane-title">GaN Sovereign Proposal Capture Enclave</h1>
+      <p class="pane-subtitle">A high-yield executive synthesis of the 35 architectural volumes designed for GaN Corporation (Team Redstone).</p>
+    </div>
+
+    <div class="callout callout-cyan">
+      <div class="callout-title">The Asymmetric Moat for a 50-Person Huntsville Contractor</div>
+      <div class="callout-body">
+        Across 35 comprehensive architectural blueprints (Volumes 01–36, skipping 12), we designed an on-premises, air-gapped sovereign defense capture engine. Its mission: <strong>allow GaN Corporation (50 engineers) to out-bid multi-thousand-person defense primes (Lockheed, Raytheon, Booz Allen)</strong> by turning 21-day proposal war room fire drills into a 4-hour mathematically audited execution loop with zero cloud egress and strict CMMC Level 2 compliance.
+      </div>
+    </div>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title"><span class="pill pill-emerald">01</span> The Core Hardware Topology</div>
+        <div class="card-text">
+          A physical <strong>Dual-Box Air-Gap Enclave ($10k CapEx)</strong>: Box A (Public Airlock for SAM.gov & OSINT scraping) and Box B (Private Sovereign Enclave with local Qwen2.5/3.8 GPU inference, Deltek rates, and past performance behind an optoisolated unidirectional diode).
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="pill pill-gold">02</span> The 6-Node Tactical Graph</div>
+        <div class="card-text">
+          Modeled directly after a <strong>U.S. Army Division Tactical Operations Center (TOC)</strong>: S-2 Intel Airlock $\to$ S-3 Opportunity Triage $\to$ HIMARS GPU Drafting Battery $\to$ S-4 Adversarial Red Team $\to$ Commander Glass HUD.
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="pill pill-purple">03</span> The Regulatory Armor</div>
+        <div class="card-text">
+          Full adherence to <strong>17 U.S.C. §105</strong> (public domain federal RFPs), <strong>FAR 52.215-8</strong> (Order of Precedence), <strong>FAR 15.305</strong> (SSEB Scoring), and strict sub-cent DCAA cost-to-technical reconciliation.
+        </div>
+      </div>
+    </div>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Pillar</th>
+          <th>Conventional Capture (Primes)</th>
+          <th>GaN Sovereign Enclave (Our Architecture)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Proposal Production Time</strong></td>
+          <td>14 to 21 Days (War Room Red Teams)</td>
+          <td><strong>4 Hours</strong> (Stateless GPU Drafting + Gate Audit)</td>
+        </tr>
+        <tr>
+          <td><strong>Annual Bid Throughput</strong></td>
+          <td>6–8 Major Bids / Year (Human Bottleneck)</td>
+          <td><strong>60–80 High-Pwin Bids / Year</strong> (Scalable Pipeline)</td>
+        </tr>
+        <tr>
+          <td><strong>Cost-Technical Alignment</strong></td>
+          <td>Spreadsheet drift, human math errors</td>
+          <td><strong>Deterministic DCAA penny-reconciler ($0.00 delta)</strong></td>
+        </tr>
+        <tr>
+          <td><strong>CMMC / CUI Egress</strong></td>
+          <td>High risk: cloud LLM paste violations</td>
+          <td><strong>100% Zero-Egress On-Premises Enclave</strong></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- PAGE 2: THE ARMY DIVISION TOC (VOL 25) -->
+  <section class="view-pane" id="v2">
+    <div class="pane-header">
+      <div class="pane-meta">
+        <span class="pane-num">FEATURED SHOWCASE</span>
+        <span class="pill pill-emerald">VOLUME 25</span>
+      </div>
+      <h1 class="pane-title">Task Force Sovereign: The Army Division TOC</h1>
+      <p class="pane-subtitle">Explaining GaN's 6-node capture architecture through the battle-tested doctrine of an Army Division Tactical Operations Center.</p>
+    </div>
+
+    <div class="callout callout-success">
+      <div class="callout-title">Doctrine Mapping for Defense Executives & General Officers</div>
+      <div class="callout-body">
+        To make complex LLM systems immediately intuitive for defense leaders and Army commands on Redstone Arsenal, Volume 25 maps the entire AI pipeline directly to an Army Staff Battle Drill:
+      </div>
+    </div>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Staff Element</th>
+          <th>TOC Mission</th>
+          <th>Sovereign Capture Engine Role</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>S-2 (Intelligence)</strong></td>
+          <td>Reconnaissance & Enemy Surveillance</td>
+          <td><strong>Public Airlock & SAM.gov Ingestion</strong>: Scraping RFPs, amendments, and competitor OSINT outside the firewall.</td>
+        </tr>
+        <tr>
+          <td><strong>S-3 (Operations)</strong></td>
+          <td>Battle Planning & Task Organization</td>
+          <td><strong>Opportunity Triage & Compliance Matrix</strong>: Shreds Section C/L/M into Requirements Traceability Matrices.</td>
+        </tr>
+        <tr>
+          <td><strong>Division Artillery (DIVARTY)</strong></td>
+          <td>HIMARS Precision Strike Fire Mission</td>
+          <td><strong>Node 4 GPU Drafting Furnace</strong>: High-speed local LLM drafting against GaN past performance and corporate resume vaults.</td>
+        </tr>
+        <tr>
+          <td><strong>S-4 (Logistics & Inspection)</strong></td>
+          <td>Battlefield Damage Assessment & Compliance</td>
+          <td><strong>Node 5 Adversarial Red Team</strong>: Hostile Source Selection Board scoring with strict FAR deficiency hunting.</td>
+        </tr>
+        <tr>
+          <td><strong>Commanding General (CG)</strong></td>
+          <td>Command & Strike Authorization</td>
+          <td><strong>Node 6 Human Commander Glass (HUD)</strong>: Real-time decision dashboard with human-in-the-loop authorization.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title">Firebreak Diode</div>
+        <div class="card-text">
+          Like a SCIF guard, the data flow from S-2 (Public) to S-3 (Private) passes through a unidirectional physical diode. Zero corporate CUI or proprietary rate data can ever travel backwards to the public internet.
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Battle Rhythm Speed</div>
+        <div class="card-text">
+          Reduces proposal battle drills from weeks to hours, allowing GaN to engage incoming task order RFPs with the speed of an artillery fire mission.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PAGE 3: ASYMMETRIC MOAT (VOL 26) -->
+  <section class="view-pane" id="v3">
+    <div class="pane-header">
+      <div class="pane-meta">
+        <span class="pane-num">STRATEGIC MEMORANDUM</span>
+        <span class="pill pill-gold">VOLUME 26</span>
+      </div>
+      <h1 class="pane-title">Executive Strategic Memorandum: The Asymmetric Moat</h1>
+      <p class="pane-subtitle">How GaN transforms capture from a linear human overhead cost into an exponential software flywheel.</p>
+    </div>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title">1. The Traditional Prime Trap</div>
+        <div class="card-text">
+          Large defense primes have 200+ proposal staff, but their win rate is paralyzed by bureaucracy, slow review cycles, and inflated indirect overhead rates (wrap rates > 2.0). Every new bid costs $150k–$300k in human labor.
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">2. GaN's Lightweight Unit Economics</div>
+        <div class="card-text">
+          By automating 90% of the mechanical compliance, shredding, and first-draft drafting, GaN's cost per bid drops by <strong>85%</strong>, allowing GaN to bid aggressively on rapid-turnaround task orders that primes pass on.
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">3. Compounding Institutional Flywheel</div>
+        <div class="card-text">
+          Every proposal drafted, won, or debriefed feeds the local memory store. The engine gets smarter with every submission, while competitors suffer corporate amnesia whenever BD staff turn over.
+        </div>
+      </div>
+    </div>
+
+    <div class="callout callout-success">
+      <div class="callout-title">The Commercial Takeaway for Dr. Jonn Kim & GaN Leadership</div>
+      <div class="callout-body">
+        This sovereign enclave is not an IT cost center. It is an offensive weapon that turns GaN into a high-throughput capture machine across Redstone Arsenal, SMDC, and Army Futures Command.
+      </div>
+    </div>
+  </section>
+
+  <!-- PAGE 4: 6-NODE TOPOLOGY (VOL 18 & 35) -->
+  <section class="view-pane" id="v4">
+    <div class="pane-header">
+      <div class="pane-meta">
+        <span class="pane-num">PHYSICAL ARCHITECTURE</span>
+        <span class="pill pill-emerald">VOLUMES 18 & 35</span>
+      </div>
+      <h1 class="pane-title">6-Node Sovereign Enclave Topology</h1>
+      <p class="pane-subtitle">The physical hardware, network zoning, and process topology powering the air-gapped system.</p>
+    </div>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Node</th>
+          <th>Physical Host & Specs</th>
+          <th>Isolated Responsibilities</th>
+          <th>Network Boundary</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Node 1: Public Airlock</strong></td>
+          <td>Edge Box / DMZ (Intel i7/16GB)</td>
+          <td>SAM.gov scraping, GovWin ingestion, public PDF OCR.</td>
+          <td>VLAN 10 (External Egress Only)</td>
+        </tr>
+        <tr>
+          <td><strong>Node 2: Institutional Ingest</strong></td>
+          <td>Private Host / Isolated Enclave</td>
+          <td>Deltek Costpoint rate sync, past performance sanitization.</td>
+          <td>VLAN 20 (Air-Gapped, No Egress)</td>
+        </tr>
+        <tr>
+          <td><strong>Node 3: Triage & Matrix</strong></td>
+          <td>Private Application Server</td>
+          <td>Section L/M decomposition, RTM generation, DCAA cost model.</td>
+          <td>VLAN 20 (Local Enclave Only)</td>
+        </tr>
+        <tr>
+          <td><strong>Node 4: Drafting Furnace</strong></td>
+          <td>Workstation (2x RTX 4090 / 96GB RAM)</td>
+          <td>High-speed stateless GPU inference (Qwen2.5/3.8, DeepSeek-R1).</td>
+          <td>VLAN 30 (GPU Compute Dedicated)</td>
+        </tr>
+        <tr>
+          <td><strong>Node 5: Adversarial Red Team</strong></td>
+          <td>Private Review Engine</td>
+          <td>Adversarial FAR 15.305 murder board scoring, deficiency flagging.</td>
+          <td>VLAN 20 (Enclave Internal)</td>
+        </tr>
+        <tr>
+          <td><strong>Node 6: Commander Glass</strong></td>
+          <td>Executive Web Glass (Port 8090)</td>
+          <td>Live SituationFrame SSE telemetry, human review & approval.</td>
+          <td>VLAN 40 (Executive Secure Workstation)</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout callout-cyan">
+      <div class="callout-title">Zero Cross-VLAN Contamination</div>
+      <div class="callout-body">
+        Managed via strict firewall rules: Node 4 (GPU compute) has zero network routes to the internet. It can only receive sanitized JSON payload recipes from Node 3 and return drafted text to Node 5. Even if an LLM attempted an outbound connection, the physical switch drops the packet.
+      </div>
+    </div>
+  </section>
+
+  <!-- PAGE 5: RFP SHREDDING & TRIAGE (VOL 03 & 30) -->
+  <section class="view-pane" id="v5">
+    <div class="pane-header">
+      <div class="pane-meta">
+        <span class="pane-num">INGESTION & GATING</span>
+        <span class="pill pill-gold">VOLUMES 03 & 30</span>
+      </div>
+      <h1 class="pane-title">RFP Shredding & 2-Pass Triage</h1>
+      <p class="pane-subtitle">How the engine ingests complex multi-hundred page DoD solicitations without losing a single requirement.</p>
+    </div>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title">Pass 1: Go/No-Go Triage</div>
+        <p class="card-text">
+          Filters RFPs in 60 seconds based on GaN's core capabilities, NAICS codes (541330, 541512), required clearance levels (Secret/TS-SCI), and mandatory past performance thresholds.
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Pass 2: Section L/M Shredder</div>
+        <p class="card-text">
+          Deconstructs Section C (Performance Work Statement), Section L (Submission Instructions), and Section M (Evaluation Criteria) into discrete atomic "shall" clauses.
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">FAR 52.215-8 Precedence Engine</div>
+        <p class="card-text">
+          Automatically flags contradictions between Section L and Section M, ensuring writers adhere to the statutory Order of Precedence to prevent disqualification.
+        </p>
+      </div>
+    </div>
+
+    <div class="spec-box">
+<span class="comment">// Discrete Requirement Traceability Structure</span>
+{
+  <span class="keyword">"clause_id"</span>: <span class="literal">"C.3.4.1"</span>,
+  <span class="keyword">"shall_text"</span>: <span class="literal">"Contractor shall provide Level 3 certified Redstone range safety support."</span>,
+  <span class="keyword">"section_m_weight"</span>: <span class="literal">"M.2 Factor 1 (Technical Approach) - High"</span>,
+  <span class="keyword">"allocated_page_budget"</span>: <span class="literal">1.5</span>,
+  <span class="keyword">"status"</span>: <span class="literal">"GATED_LOCKED"</span>
+}
+    </div>
+  </section>
+
+  <!-- PAGE 6: DCAA COST-TECHNICAL BRIDGE (VOL 23) -->
+  <section class="view-pane" id="v6">
+    <div class="pane-header">
+      <div class="pane-meta">
+        <span class="pane-num">FINANCIAL INTEGRITY</span>
+        <span class="pill pill-emerald">VOLUME 23</span>
+      </div>
+      <h1 class="pane-title">The Cost-Technical Bridge: Zero Dollar Drift</h1>
+      <p class="pane-subtitle">Bridging Deltek Costpoint pricing models and technical narrative with mathematical certainty.</p>
+    </div>
+
+    <div class="callout callout-alert">
+      <div class="callout-title">The #1 Disqualification Trap in Huntsville</div>
+      <div class="callout-body">
+        Technical writers state one staffing figure (e.g., 5 Systems Engineers on-site at Redstone), while the cost volume accountant prices 4.5 FTEs in the Excel model. Contracting officers issue immediate cost realism penalties. Volume 23 designs the deterministic arithmetic reconciler that bridges this gap.
+      </div>
+    </div>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title">Bid IR (Intermediate Representation)</div>
+        <div class="card-text">
+          Extracts every quantitative commitment (FTE counts, labor categories, clearance levels, shift schedules) into a structured AST.
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Automated Penny Reconciliation</div>
+        <div class="card-text">
+          Compares narrative claims against the Section B pricing sheet. If a single penny or tenth of an FTE fails to balance, the draft engine halts.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PAGE 7: DRAFTING FURNACE (VOL 24 & 31) -->
+  <section class="view-pane" id="v7">
+    <div class="pane-header">
+      <div class="pane-meta">
+        <span class="pane-num">RECURSIVE SYNTHESIS</span>
+        <span class="pill pill-gold">VOLUMES 24 & 31</span>
+      </div>
+      <h1 class="pane-title">GPU Drafting Furnace & Autoresearch Loop</h1>
+      <p class="pane-subtitle">How local open-weight models draft high-scoring GovCon prose using Karpathy-style optimization loops.</p>
+    </div>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title">Stateless Inference</div>
+        <p class="card-text">
+          No chat drift or context poisoning. Each proposal section is generated in clean, stateless batches using frozen prompts and verified recipe schemas.
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Recursive Refinement Loop</div>
+        <p class="card-text">
+          Drafts undergo 2 to 5 generations of evolutionary mutation. If a section lacks feature-benefit-proof proof points, the Furnace rewrites it with superior past performance citations.
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Discriminator Micro-Gate</div>
+        <p class="card-text">
+          In-flight monitoring catches passive voice (<em>"we will endeavor to"</em>) and immediately forces active GovCon commitments (<em>"GaN will deploy..."</em>).
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PAGE 8: ADVERSARIAL RED TEAM (VOL 15 & 32) -->
+  <section class="view-pane" id="v8">
+    <div class="pane-header">
+      <div class="pane-meta">
+        <span class="pane-num">MURDER BOARD AUDITING</span>
+        <span class="pill pill-crimson">VOLUMES 15 & 32</span>
+      </div>
+      <h1 class="pane-title">Adversarial Red Team & Section M Scorer</h1>
+      <p class="pane-subtitle">Autonomous Source Selection Board simulation with unsparing deficiency detection.</p>
+    </div>
+
+    <div class="callout callout-alert">
+      <div class="callout-title">The Flaw of Polite Internal Red Teams</div>
+      <div class="callout-body">
+        Human Red Teams suffer from polite fatigue and company politics. Node 5 acts as an adversarial evaluator programmed with hostile DoD scoring rubrics. It searches specifically for unverified claims, unmapped requirements, and compliance holes that would cause an SSEB evaluator to deduct points.
+      </div>
+    </div>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Evaluation Rating</th>
+          <th>DoD Evaluation Definition</th>
+          <th>Node 5 Automated Enforcement</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Blue (Outstanding)</strong></td>
+          <td>Multiple significant strengths, zero weaknesses.</td>
+          <td>Verifies provable discriminators and quantified past metrics.</td>
+        </tr>
+        <tr>
+          <td><strong>Purple (Good)</strong></td>
+          <td>Strengths outweigh weaknesses, low risk.</td>
+          <td>Audits complete clause coverage with standard proof points.</td>
+        </tr>
+        <tr>
+          <td><strong>Green (Acceptable)</strong></td>
+          <td>Meets minimum requirements, acceptable risk.</td>
+          <td>Baseline requirement verification.</td>
+        </tr>
+        <tr>
+          <td><strong>Red (Unacceptable)</strong></td>
+          <td>One or more Deficiencies present.</td>
+          <td><strong>HARD STOP</strong>: Aborts build if any mandatory clause is omitted.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- PAGE 9: COMMANDER GLASS HUD (VOL 16 & 33) -->
+  <section class="view-pane" id="v9">
+    <div class="pane-header">
+      <div class="pane-meta">
+        <span class="pane-num">EXECUTIVE CONTROL</span>
+        <span class="pill pill-emerald">VOLUMES 16 & 33</span>
+      </div>
+      <h1 class="pane-title">Node 6: Human Commander Glass & HUD</h1>
+      <p class="pane-subtitle">The real-time telemetry dashboard providing human-in-the-loop governance over the automated fleet.</p>
+    </div>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title">Server-Sent Events (SSE) Stream</div>
+        <div class="card-text">
+          Real-time telemetry streaming from the pipeline daemon into an executive browser HUD (Port 8090). Zero polling lag.
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">SituationFrame Architecture</div>
+        <div class="card-text">
+          Displays current active stage, token burn velocity, Section M compliance score, and pending human review approvals.
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Human Sign-Off Gate</div>
+        <div class="card-text">
+          The autonomous system cannot submit or release a final proposal without explicit cryptographically logged approval from the capture executive.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PAGE 10: SCIF VLAN & LEGAL (VOL 04 & 10) -->
+  <section class="view-pane" id="v10">
+    <div class="pane-header">
+      <div class="pane-meta">
+        <span class="pane-num">DATA GOVERNANCE</span>
+        <span class="pill pill-purple">VOLUMES 04 & 10</span>
+      </div>
+      <h1 class="pane-title">SCIF VLAN Isolation & Legal Boundaries</h1>
+      <p class="pane-subtitle">Operating safely under federal copyright law, proprietary data protections, and CMMC Level 2.</p>
+    </div>
+
+    <div class="callout callout-success">
+      <div class="callout-title">The Legal Foundation: 17 U.S.C. §105</div>
+      <div class="callout-body">
+        Works of the United States Government (RFPs, PWS, Section L/M attachments, Q&A releases) are public domain under <strong>17 U.S.C. §105</strong>. Node 1 scrapes and shreds these documents with complete legal immunity. However, GaN's proprietary past performance, wrap rates, and resumes stay locked in private enclaves.
+      </div>
+    </div>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title">3-Tier SCIF Boundary</div>
+        <div class="card-text">
+          Tier 1 (Public SAM.gov data) $\to$ Tier 2 (CUI & Deltek Enclave) $\to$ Tier 3 (Classified Vault on dedicated air-gap hardware).
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">CMMC 2.0 / DFARS 7012</div>
+        <div class="card-text">
+          Eliminates all FedRAMP cloud transmission liability by keeping 100% of LLM compute and storage within GaN's physical facility.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PAGE 11: JEV SYSTEM-ONE (VOL 36) -->
+  <section class="view-pane" id="v11">
+    <div class="pane-header">
+      <div class="pane-meta">
+        <span class="pane-num">DECISION FABRIC</span>
+        <span class="pill pill-cyan">VOLUME 36</span>
+      </div>
+      <h1 class="pane-title">JEV System-One Decision Fabric</h1>
+      <p class="pane-subtitle">Empirical statistical gating replacing human guesswork with Bayesian survival thresholds.</p>
+    </div>
+
+    <div class="callout callout-cyan">
+      <div class="callout-title">The Highest-Tier Authority in the Enclave</div>
+      <div class="callout-body">
+        Volume 36 establishes the <strong>JEV Decision Fabric</strong>. Before any capture strategy, proposal volume outline, or commercial business model is committed, it must survive multi-slot adversarial disproof. A strategy must achieve a documented <strong>>90% survival threshold</strong> before implementation begins.
+      </div>
+    </div>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title">Orthogonal Scenario Slates</div>
+        <div class="card-text">
+          Tests at least 6 structurally orthogonal options (Conventional, Cheapest Proof, High Upside, Contrarian, Blocked Honest, Sequence) to avoid tunnel vision.
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Zero-Vibe Verification</div>
+        <div class="card-text">
+          Rejects prompt sycophancy and simulated agreements. Rulings are based on mathematical probabilities and physical test outcomes.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PAGE 12: COMPLETE 35-VOLUME DIRECTORY -->
+  <section class="view-pane" id="v12">
+    <div class="pane-header">
+      <div class="pane-meta">
+        <span class="pane-num">APPENDIX DIRECTORY</span>
+        <span class="pill pill-gold">VOLUMES 01–36</span>
+      </div>
+      <h1 class="pane-title">Complete 35-Volume Architectural Index</h1>
+      <p class="pane-subtitle">A comprehensive breakdown of all 35 engineering volumes created for the GaN proposal capture enclave.</p>
+    </div>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Vol</th>
+          <th>Architectural Title</th>
+          <th>Domain & Strategic Role</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>01</strong></td><td>Core Vision & Workflow</td><td>The pragmatic reality of capture automation and the 5-step operational chain.</td></tr>
+        <tr><td><strong>02</strong></td><td>Standalone App Architecture & UX</td><td>3-panel split-screen proposal workbench compiled into a single static Go binary.</td></tr>
+        <tr><td><strong>03</strong></td><td>RFP Sourcing & 2-Pass Triage</td><td>Public solicitations filtering, NAICS screening, and mandatory capability gating.</td></tr>
+        <tr><td><strong>04</strong></td><td>Public Domain & Legal Boundaries</td><td>17 U.S.C. §105 compliance, CUI isolation, and ethical GovCon data boundaries.</td></tr>
+        <tr><td><strong>05</strong></td><td>14-Point Capture Architecture</td><td>Grok's battle-hardened capture shop workflow from discovery to contract award.</td></tr>
+        <tr><td><strong>06</strong></td><td>Hardware & Private Enclave</td><td>Local LLM compute sizing, memory budgets, and air-gapped LAN routing topology.</td></tr>
+        <tr><td><strong>07</strong></td><td>Astra Design Falsification</td><td>Rigorous systems invariants, failure mode mapping, and architectural stress tests.</td></tr>
+        <tr><td><strong>08</strong></td><td>Grok Bid IR & Control Plane</td><td>5-verb capture control plane and intermediate semantic representation.</td></tr>
+        <tr><td><strong>09</strong></td><td>Accountability Contract</td><td>Anti-theater doctrine: eliminating AI fluff in defense proposals.</td></tr>
+        <tr><td><strong>10</strong></td><td>Huntsville Client Intelligence</td><td>3-tier SCIF security boundaries and Huntsville defense customer requirements.</td></tr>
+        <tr><td><strong>11</strong></td><td>Frontier Recipe Extraction</td><td>Multi-model synthesis and structured JSON recipe generation.</td></tr>
+        <tr><td><strong>13</strong></td><td>SOTA Ingestion & Retrieval</td><td>TableFormer, Docling, ColPali fixes, and BGE-M3 hybrid semantic search.</td></tr>
+        <tr><td><strong>14</strong></td><td>The Synthetic System</td><td>5-abstraction agent-sovereign architecture for autonomous proposal generation.</td></tr>
+        <tr><td><strong>15</strong></td><td>Adversarial Falsification</td><td>Red Team stress-testing of sovereign capture designs against hostile failure modes.</td></tr>
+        <tr><td><strong>16</strong></td><td>SituationCapsule Synthesis</td><td>Real-time situational telemetry and human-in-the-loop action frontiers.</td></tr>
+        <tr><td><strong>17</strong></td><td>Dual-Box Topology</td><td>Level 5 automated ingestion on $10k commodity hardware.</td></tr>
+        <tr><td><strong>18</strong></td><td>GaN Sovereign Enclave Topology</td><td>6-node private network zoning, firewall rules, and proposal alcove isolation.</td></tr>
+        <tr><td><strong>19</strong></td><td>6-Node Software Specification</td><td>Technical engineering requirements and IPC protocols across all enclave nodes.</td></tr>
+        <tr><td><strong>20</strong></td><td>Compound Clause Decomposition</td><td>Breaking complex RFP "shall" mandates into atomic verifiable units.</td></tr>
+        <tr><td><strong>21</strong></td><td>The Compliance Iceberg</td><td>Standards expander: unpacking referenced MIL-STDs and ISO clauses automatically.</td></tr>
+        <tr><td><strong>22</strong></td><td>The Amendment Clock</td><td>Graph engine tracking solicitation amendments, Q&A changes, and PWS deltas.</td></tr>
+        <tr><td><strong>23</strong></td><td>The Cost-Technical Bridge</td><td>Competitive OSINT flywheel, DCAA arithmetic reconciler, and protest clock.</td></tr>
+        <tr><td><strong>24</strong></td><td>Autoresearch Proposal Loop</td><td>Karpathy-style evolutionary self-improvement loops for technical narrative.</td></tr>
+        <tr><td><strong>25</strong></td><td>Army Division TOC (Featured)</td><td>Mapping the 6-node enclave to an Army Battle Drill (S-2, S-3, DIVARTY, S-4, CG).</td></tr>
+        <tr><td><strong>26</strong></td><td>Executive Strategic Memo</td><td>The commercial business case for GaN: building an asymmetric defense moat.</td></tr>
+        <tr><td><strong>27</strong></td><td>Software Selection Matrix</td><td>Empirical evaluation of local LLMs (Qwen, DeepSeek, Llama) for defense capture.</td></tr>
+        <tr><td><strong>28</strong></td><td>Node 1 Public Airlock</td><td>Build execution plan for the external web scraping and OSINT proxy node.</td></tr>
+        <tr><td><strong>29</strong></td><td>Node 2 Corporate Oracle</td><td>Context caching and 5W communication graph for institutional knowledge.</td></tr>
+        <tr><td><strong>30</strong></td><td>Node 3 Opportunity Triage</td><td>Section L/M shredder, compliance matrix generator, and DCAA pricing engine.</td></tr>
+        <tr><td><strong>31</strong></td><td>Node 4 Drafting Furnace</td><td>GPU drafting battery and stateless LLM generation engine.</td></tr>
+        <tr><td><strong>32</strong></td><td>Node 5 Adversarial Red Team</td><td>Simulated Source Selection Evaluation Board and Section M compliance scorer.</td></tr>
+        <tr><td><strong>33</strong></td><td>Node 6 Commander Glass HUD</td><td>Human commander cockpit and real-time SSE telemetry HUD.</td></tr>
+        <tr><td><strong>34</strong></td><td>Dual-Tier Context Cache</td><td>L1/L2 memory caching for instant proposal past performance retrieval.</td></tr>
+        <tr><td><strong>35</strong></td><td>Master Enclave Architecture</td><td>Complete physical and logical system blueprint tying all nodes together.</td></tr>
+        <tr><td><strong>36</strong></td><td>JEV Decision Fabric</td><td>System-One decision fabric enforcing empirical probability thresholds.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- BOTTOM PAGINATION -->
+  <div class="pagination-nav">
+    <button class="btn" id="prev-btn">← Previous Section</button>
+    <div style="font-family: var(--mono); font-size: 12px; color: var(--text-muted);" id="page-counter">Page 1 of 12</div>
+    <button class="btn btn-gold" id="next-btn">Next Section →</button>
+  </div>
+
+</main>
+
+<script>
+  const navItems = document.querySelectorAll('.nav-item');
+  const panes = document.querySelectorAll('.view-pane');
+  const prevBtn = document.getElementById('prev-btn');
+  const nextBtn = document.getElementById('next-btn');
+  const pageCounter = document.getElementById('page-counter');
+
+  let currentIndex = 0;
+  const totalPages = panes.length;
+
+  function updatePage(index) {
+    if (index < 0 || index >= totalPages) return;
+    currentIndex = index;
+
+    panes.forEach((p, idx) => {
+      p.classList.toggle('active', idx === currentIndex);
+    });
+
+    navItems.forEach((n, idx) => {
+      n.classList.toggle('active', idx === currentIndex);
+    });
+
+    pageCounter.textContent = `Page ${currentIndex + 1} of ${totalPages}`;
+    prevBtn.style.visibility = currentIndex === 0 ? 'hidden' : 'visible';
+    nextBtn.textContent = currentIndex === totalPages - 1 ? 'Finish Synthesis' : 'Next Section →';
+    
+    document.getElementById('content-container').scrollTop = 0;
+  }
+
+  navItems.forEach((item, idx) => {
+    item.addEventListener('click', () => updatePage(idx));
+  });
+
+  prevBtn.addEventListener('click', () => {
+    if (currentIndex > 0) updatePage(currentIndex - 1);
+  });
+
+  nextBtn.addEventListener('click', () => {
+    if (currentIndex < totalPages - 1) {
+      updatePage(currentIndex + 1);
+    } else {
+      updatePage(0);
+    }
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === 'PageDown') {
+      if (currentIndex < totalPages - 1) updatePage(currentIndex + 1);
+    } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+      if (currentIndex > 0) updatePage(currentIndex - 1);
+    }
+  });
+
+  updatePage(0);
+</script>
+
+</body>
+</html>
