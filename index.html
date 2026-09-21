@@ -3,1039 +3,370 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Autonomous Proposal Platform — Executive Defense Briefing</title>
+<title>Executive Briefing — Defense Proposal Software</title>
 <style>
   :root {
-    --bg-base: #06080a;
-    --bg-surface: #0c1015;
-    --bg-card: #121820;
-    --bg-card-hover: #18222d;
-    --border-subtle: #1c2633;
-    --border-accent: #2e3e52;
-    --text-primary: #e6edf3;
-    --text-secondary: #8b949e;
-    --text-muted: #586069;
+    --bg: #0b0f14;
+    --card: #141b22;
+    --card-border: #24303e;
+    --text: #f0f6fc;
+    --text-muted: #8b949e;
     --gold: #f0daa5;
-    --gold-dim: #9a8354;
-    --gold-glow: rgba(240, 218, 165, 0.12);
     --emerald: #76d7a4;
-    --emerald-dim: #3a7a58;
-    --emerald-glow: rgba(118, 215, 164, 0.12);
     --crimson: #ff7b72;
-    --crimson-dim: #8b2b2b;
-    --cyan: #79c0ff;
     --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    --mono: "SF Mono", "Fira Code", Menlo, Monaco, Consolas, monospace;
+    --mono: "SF Mono", Menlo, Consolas, monospace;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
-    background-color: var(--bg-base);
-    color: var(--text-primary);
+    background: var(--bg);
+    color: var(--text);
     font-family: var(--sans);
-    line-height: 1.6;
-    display: flex;
-    height: 100vh;
-    overflow: hidden;
+    line-height: 1.5;
+    padding: 32px 20px;
+    max-width: 900px;
+    margin: 0 auto;
   }
 
-  aside {
-    width: 320px;
-    background-color: var(--bg-surface);
-    border-right: 1px solid var(--border-subtle);
-    display: flex;
-    flex-direction: column;
-    flex-shrink: 0;
+  header {
+    border-bottom: 1px solid var(--card-border);
+    padding-bottom: 24px;
+    margin-bottom: 32px;
   }
 
-  .sidebar-header {
-    padding: 24px 20px;
-    border-bottom: 1px solid var(--border-subtle);
-  }
-
-  .badge-tag {
+  .badge {
     display: inline-block;
     font-family: var(--mono);
     font-size: 11px;
-    font-weight: 600;
+    font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.05em;
+    background: rgba(240, 218, 165, 0.1);
+    color: var(--gold);
+    border: 1px solid rgba(240, 218, 165, 0.3);
     padding: 3px 8px;
     border-radius: 4px;
-    background: var(--gold-glow);
-    color: var(--gold);
-    border: 1px solid var(--gold-dim);
-    margin-bottom: 8px;
+    margin-bottom: 12px;
   }
 
-  .sidebar-title {
-    font-size: 17px;
-    font-weight: 700;
-    color: var(--text-primary);
-    letter-spacing: -0.01em;
-  }
-
-  .sidebar-sub {
-    font-size: 11px;
-    color: var(--text-secondary);
-    margin-top: 4px;
-    font-family: var(--mono);
-  }
-
-  nav {
-    flex: 1;
-    overflow-y: auto;
-    padding: 12px 10px;
-  }
-
-  .nav-group-label {
-    font-family: var(--mono);
-    font-size: 10px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--text-muted);
-    padding: 12px 10px 6px 10px;
-  }
-
-  .nav-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 10px 12px;
-    border-radius: 6px;
-    color: var(--text-secondary);
-    text-decoration: none;
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.15s ease;
-    border: 1px solid transparent;
-  }
-
-  .nav-item:hover {
-    background-color: var(--bg-card);
-    color: var(--text-primary);
-  }
-
-  .nav-item.active {
-    background-color: var(--bg-card);
-    color: var(--gold);
-    border-color: var(--border-accent);
-    font-weight: 600;
-  }
-
-  .nav-num {
-    font-family: var(--mono);
-    font-size: 11px;
-    color: var(--text-muted);
-    width: 20px;
-    text-align: right;
-  }
-
-  .nav-item.active .nav-num {
-    color: var(--gold);
-  }
-
-  .sidebar-footer {
-    padding: 16px 20px;
-    border-top: 1px solid var(--border-subtle);
-    font-size: 11px;
-    font-family: var(--mono);
-    color: var(--text-muted);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  main {
-    flex: 1;
-    overflow-y: auto;
-    padding: 48px 64px;
-    position: relative;
-    background: radial-gradient(circle at top right, rgba(118, 215, 164, 0.03), transparent 40%),
-                radial-gradient(circle at bottom right, rgba(240, 218, 165, 0.03), transparent 40%);
-  }
-
-  .view-pane {
-    display: none;
-    max-width: 980px;
-    margin: 0 auto;
-    animation: fadeIn 0.2s ease-in-out;
-  }
-
-  .view-pane.active {
-    display: block;
-  }
-
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(6px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .pane-header {
-    margin-bottom: 32px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid var(--border-subtle);
-  }
-
-  .pane-meta {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 8px;
-  }
-
-  .pane-num {
-    font-family: var(--mono);
-    font-size: 12px;
-    color: var(--gold);
-    font-weight: 600;
-  }
-
-  .pane-title {
-    font-size: 30px;
+  h1 {
+    font-size: 28px;
     font-weight: 800;
     letter-spacing: -0.02em;
-    color: var(--text-primary);
+    margin-bottom: 8px;
   }
 
-  .pane-subtitle {
+  .subtitle {
     font-size: 15px;
-    color: var(--text-secondary);
-    margin-top: 6px;
-    line-height: 1.5;
+    color: var(--text-muted);
   }
 
-  .card-grid {
+  .section-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin: 32px 0 16px 0;
+    color: var(--gold);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .grid-2 {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 20px;
-    margin: 24px 0;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  .grid-3 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+    margin-bottom: 20px;
   }
 
   .card {
-    background: var(--bg-card);
-    border: 1px solid var(--border-subtle);
+    background: var(--card);
+    border: 1px solid var(--card-border);
     border-radius: 8px;
-    padding: 22px;
-    transition: all 0.2s ease;
+    padding: 20px;
   }
 
-  .card:hover {
-    border-color: var(--border-accent);
-    background: var(--bg-card-hover);
-  }
-
-  .card-title {
+  .card h3 {
     font-size: 15px;
     font-weight: 700;
-    color: var(--text-primary);
     margin-bottom: 8px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
+    color: var(--text);
   }
 
-  .card-text {
+  .card p {
     font-size: 13px;
-    color: var(--text-secondary);
-    line-height: 1.6;
+    color: var(--text-muted);
+    line-height: 1.5;
   }
 
-  .metric-stat {
+  .stat {
     font-family: var(--mono);
-    font-size: 28px;
+    font-size: 26px;
     font-weight: 800;
     color: var(--gold);
-    line-height: 1.2;
-    margin: 8px 0;
+    margin: 4px 0 8px 0;
   }
 
-  .metric-label {
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+  .flow-step {
+    display: flex;
+    gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--card-border);
+  }
+
+  .flow-step:last-child {
+    border-bottom: none;
+  }
+
+  .step-num {
+    font-family: var(--mono);
+    font-weight: 800;
+    color: var(--gold);
+    font-size: 14px;
+    width: 24px;
+    flex-shrink: 0;
+  }
+
+  .step-content h4 {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 3px;
+  }
+
+  .step-content p {
+    font-size: 13px;
     color: var(--text-muted);
   }
 
-  .pill {
-    display: inline-block;
-    font-family: var(--mono);
-    font-size: 11px;
-    padding: 2px 8px;
-    border-radius: 4px;
-    font-weight: 600;
-  }
-
-  .pill-emerald { background: var(--emerald-glow); color: var(--emerald); border: 1px solid var(--emerald-dim); }
-  .pill-gold { background: var(--gold-glow); color: var(--gold); border: 1px solid var(--gold-dim); }
-  .pill-cyan { background: rgba(121, 192, 255, 0.1); color: var(--cyan); border: 1px solid #23456b; }
-  .pill-crimson { background: rgba(255, 123, 114, 0.1); color: var(--crimson); border: 1px solid var(--crimson-dim); }
-
-  table.data-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 20px 0;
-    font-size: 13px;
-  }
-
-  table.data-table th {
-    background: var(--bg-surface);
-    color: var(--text-secondary);
-    font-family: var(--mono);
-    font-weight: 600;
-    text-align: left;
-    padding: 12px 14px;
-    border-bottom: 1px solid var(--border-accent);
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-
-  table.data-table td {
-    padding: 14px;
-    border-bottom: 1px solid var(--border-subtle);
-    color: var(--text-primary);
-  }
-
-  table.data-table tr:hover td {
-    background: rgba(255,255,255,0.015);
-  }
-
-  .callout {
-    border-left: 3px solid var(--gold);
-    background: var(--gold-glow);
-    padding: 18px 20px;
+  .highlight-box {
+    background: rgba(118, 215, 164, 0.08);
+    border-left: 3px solid var(--emerald);
+    padding: 16px 18px;
     border-radius: 0 6px 6px 0;
-    margin: 20px 0;
-  }
-
-  .callout-success { border-left-color: var(--emerald); background: var(--emerald-glow); }
-  .callout-cyan { border-left-color: var(--cyan); background: rgba(121, 192, 255, 0.08); }
-  .callout-alert { border-left-color: var(--crimson); background: rgba(255, 123, 114, 0.08); }
-
-  .callout-title {
-    font-size: 12px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin-bottom: 6px;
-    color: var(--gold);
-    font-family: var(--mono);
-  }
-  .callout-success .callout-title { color: var(--emerald); }
-  .callout-cyan .callout-title { color: var(--cyan); }
-  .callout-alert .callout-title { color: var(--crimson); }
-
-  .callout-body { font-size: 13px; color: var(--text-primary); line-height: 1.5; }
-
-  .diagram-container {
-    background: #080b0f;
-    border: 1px solid var(--border-subtle);
-    border-radius: 8px;
-    padding: 24px;
     margin: 24px 0;
   }
 
-  .node-flow {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: relative;
-    padding: 12px 0;
-  }
-
-  .node-box {
-    background: var(--bg-card);
-    border: 1px solid var(--border-accent);
-    border-radius: 6px;
-    padding: 12px 14px;
-    width: 140px;
-    font-size: 11px;
-    font-family: var(--mono);
-    text-align: center;
-    color: var(--text-primary);
-  }
-
-  .node-arrow {
-    flex: 1;
-    height: 2px;
-    background: var(--border-accent);
-    position: relative;
-  }
-
-  .node-arrow::after {
-    content: '';
-    position: absolute;
-    right: 0;
-    top: -4px;
-    border: 5px solid transparent;
-    border-left-color: var(--border-accent);
-  }
-
-  .pagination-nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 48px;
-    padding-top: 24px;
-    border-top: 1px solid var(--border-subtle);
-  }
-
-  .btn {
-    background: var(--bg-card);
-    border: 1px solid var(--border-accent);
-    color: var(--text-primary);
-    padding: 10px 18px;
-    border-radius: 6px;
+  .highlight-box h4 {
     font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-family: var(--sans);
-    transition: all 0.2s ease;
+    font-weight: 700;
+    color: var(--emerald);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 4px;
   }
 
-  .btn:hover {
-    background: var(--bg-card-hover);
-    border-color: var(--gold);
+  .highlight-box p {
+    font-size: 13px;
+    color: var(--text);
+  }
+
+  .question-card {
+    background: var(--card);
+    border-left: 3px solid var(--gold);
+    padding: 16px 20px;
+    border-radius: 0 8px 8px 0;
+    margin-bottom: 12px;
+  }
+
+  .question-card h4 {
+    font-size: 14px;
+    font-weight: 700;
     color: var(--gold);
+    margin-bottom: 4px;
   }
 
-  .btn-gold {
-    background: var(--gold);
-    color: #06080a;
-    border-color: var(--gold);
+  .question-card p {
+    font-size: 13px;
+    color: var(--text);
+    font-style: italic;
   }
 
-  .btn-gold:hover {
-    background: #e2c98e;
-    color: #06080a;
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 13px;
+  }
+
+  th {
+    text-align: left;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--card-border);
+    color: var(--text-muted);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  td {
+    padding: 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+
+  @media (max-width: 640px) {
+    .grid-2 { grid-template-columns: 1fr; }
   }
 </style>
 </head>
 <body>
 
-<!-- SIDEBAR -->
-<aside>
-  <div class="sidebar-header">
-    <span class="badge-tag">Defense Capture Tech</span>
-    <div class="sidebar-title">Executive Briefing</div>
-    <div class="sidebar-sub">Autonomous Proposal Platform</div>
+  <header>
+    <div class="badge">Executive Advisor Briefing</div>
+    <h1>Defense Proposal Software</h1>
+    <div class="subtitle">A simple overview of what was built, how it works, and the core business decision.</div>
+  </header>
+
+  <!-- THE BIG PICTURE -->
+  <div class="highlight-box">
+    <h4>What This Is In One Sentence</h4>
+    <p>We built software that runs on an office server to automatically read government solicitations, check every requirement, pull company past performance, and write audit-ready defense proposals in Microsoft Word in 4 hours instead of 3 weeks.</p>
   </div>
 
-  <nav id="sidebar-nav">
-    <div class="nav-group-label">The Executive Case</div>
-    <a class="nav-item active" data-target="c1"><span class="nav-num">01</span> Executive Summary</a>
-    <a class="nav-item" data-target="c2"><span class="nav-num">02</span> The Business Problem</a>
-    <a class="nav-item" data-target="c3"><span class="nav-num">03</span> How It Works (6 Stages)</a>
-
-    <div class="nav-group-label">Key Capabilities</div>
-    <a class="nav-item" data-target="c4"><span class="nav-num">04</span> 100% Requirement Coverage</a>
-    <a class="nav-item" data-target="c5"><span class="nav-num">05</span> Cost vs. Technical Match</a>
-    <a class="nav-item" data-target="c6"><span class="nav-num">06</span> Automated Compliance Audit</a>
-    <a class="nav-item" data-target="c7"><span class="nav-num">07</span> Microsoft Word Generator</a>
-
-    <div class="nav-group-label">Security & Strategy</div>
-    <a class="nav-item" data-target="c8"><span class="nav-num">08</span> On-Premise Security & CMMC</a>
-    <a class="nav-item" data-target="c9"><span class="nav-num">09</span> Pricing & ROI Model</a>
-    <a class="nav-item" data-target="c10"><span class="nav-num">10</span> Key Questions for Review</a>
-  </nav>
-
-  <div class="sidebar-footer">
-    <span>Platform: On-Premise Go</span>
-    <span class="pill pill-emerald">Zero Cloud Egress</span>
-  </div>
-</aside>
-
-<!-- MAIN CONTENT -->
-<main id="content-container">
-
-  <!-- 01: EXECUTIVE SUMMARY -->
-  <section class="view-pane active" id="c1">
-    <div class="pane-header">
-      <div class="pane-meta">
-        <span class="pane-num">SECTION 01</span>
-        <span class="pill pill-gold">OVERVIEW</span>
-      </div>
-      <h1 class="pane-title">Autonomous Proposal Platform</h1>
-      <p class="pane-subtitle">An on-premise, secure software platform that turns multi-week defense proposal efforts into automated, audit-ready submissions in hours.</p>
+  <!-- THE 3 PAIN POINTS -->
+  <div class="section-title">1. Why Defense Contractors Need This</div>
+  <div class="grid-3">
+    <div class="card">
+      <div class="stat">6–8 Bids</div>
+      <h3>The Human Limit</h3>
+      <p>A good proposal manager caps out at 6 to 8 bids a year. Hiring more senior capture people is slow, expensive ($250k+ each), and eats profit margins.</p>
     </div>
-
-    <div class="callout callout-cyan">
-      <div class="callout-title">The Purpose of This Review</div>
-      <div class="callout-body">
-        This briefing summarizes a defense proposal platform built in pure Go that runs entirely on local servers inside a defense contractor's facility. It automates the most time-consuming parts of proposal capture—extracting solicitation requirements, drafting compliant technical narrative, and matching labor pricing to narrative commitments—with <strong>zero cloud data transmission</strong> and <strong>100% auditable mathematical accuracy</strong>.
-      </div>
+    <div class="card">
+      <div class="stat">0 Errors</div>
+      <h3>Disqualification Trap</h3>
+      <p>The government throws out proposals for minor errors—like missing one small requirement or having numbers in the pricing sheet that don't match the written proposal.</p>
     </div>
-
-    <div class="card-grid">
-      <div class="card">
-        <div class="card-title"><span class="pill pill-emerald">01</span> The Core Solution</div>
-        <div class="card-text">
-          An automated 6-stage proposal engine that ingests government solicitations (RFP Sections C, L, and M), builds a complete compliance matrix, pulls from company past performance, and produces formatted Microsoft Word (.docx) documents.
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-title"><span class="pill pill-gold">02</span> Why It Is Different</div>
-        <div class="card-text">
-          Unlike public AI tools (ChatGPT, Claude) that hallucinate facts and violate federal security rules, this platform runs 100% on-premise with built-in mathematical checks that prevent dropped requirements and pricing errors.
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-title"><span class="pill pill-crimson">03</span> The Strategic Question</div>
-        <div class="card-text">
-          Should this platform be deployed exclusively inside one defense contractor in exchange for equity, or should the software remain in an independent entity and be licensed to multiple non-competing contractors across the market?
-        </div>
-      </div>
+    <div class="card">
+      <div class="stat">100% Local</div>
+      <h3>Can't Use Cloud AI</h3>
+      <p>Defense contractors cannot paste sensitive rates, resumes, or contract data into ChatGPT or cloud tools without violating federal cybersecurity rules.</p>
     </div>
-
-    <table class="data-table">
-      <thead>
-        <tr>
-          <th>Proposal Metric</th>
-          <th>Traditional Manual Process</th>
-          <th>Automated Platform Performance</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><strong>Task Order Turnaround</strong></td>
-          <td>14–21 Days (Overtime Fire Drill)</td>
-          <td><strong>4 Hours</strong> (Full Compliance Draft)</td>
-        </tr>
-        <tr>
-          <td><strong>Annual Proposal Capacity</strong></td>
-          <td>6–8 Major Bids per Team</td>
-          <td><strong>60–80 Quality Bids per Year</strong></td>
-        </tr>
-        <tr>
-          <td><strong>Requirement Omission Rate</strong></td>
-          <td>15–20% human fatigue error rate</td>
-          <td><strong>0.00% (Mathematical Verification)</strong></td>
-        </tr>
-        <tr>
-          <td><strong>Cost vs. Technical Consistency</strong></td>
-          <td>Manual spreadsheet checks</td>
-          <td><strong>Automated Sub-Cent Cross-Check</strong></td>
-        </tr>
-        <tr>
-          <td><strong>Security & Data Privacy</strong></td>
-          <td>High risk if teams use cloud AI</td>
-          <td><strong>100% Air-Gapped / CMMC Level 2 Ready</strong></td>
-        </tr>
-      </tbody>
-    </table>
-  </section>
-
-  <!-- 02: THE BUSINESS PROBLEM -->
-  <section class="view-pane" id="c2">
-    <div class="pane-header">
-      <div class="pane-meta">
-        <span class="pane-num">SECTION 02</span>
-        <span class="pill pill-crimson">MARKET BOTTLENECK</span>
-      </div>
-      <h1 class="pane-title">Why Defense Proposal Operations Break</h1>
-      <p class="pane-subtitle">The three fundamental operational bottlenecks that cap growth for mid-tier defense contractors.</p>
-    </div>
-
-    <div class="card-grid">
-      <div class="card">
-        <div class="card-title">1. The Capture Headcount Wall</div>
-        <div class="metric-stat">$250k+</div>
-        <div class="metric-label">Annual Cost per Senior Proposal Lead</div>
-        <p class="card-text" style="margin-top: 10px;">
-          Even elite proposal managers can only manage 6 to 8 major competitive bids per year. Scaling bid volume linearly requires hiring rare, expensive capture talent that inflates indirect overhead rates.
-        </p>
-      </div>
-
-      <div class="card">
-        <div class="card-title">2. Compliance Disqualification</div>
-        <div class="metric-stat">70%</div>
-        <div class="metric-label">Bids Eliminated for Minor Errors</div>
-        <p class="card-text" style="margin-top: 10px;">
-          Government Source Selection Boards disqualify proposals for missing a single mandatory Section L instruction or having a minor discrepancy between the cost volume and technical volume.
-        </p>
-      </div>
-
-      <div class="card">
-        <div class="card-title">3. The Security Barrier</div>
-        <div class="metric-stat">DFARS 7012</div>
-        <div class="metric-label">CMMC 2.0 Cloud Prohibition</div>
-        <p class="card-text" style="margin-top: 10px;">
-          Defense contractors cannot paste Controlled Unclassified Information (CUI), proprietary labor rates, or employee resumes into cloud AI tools without violating federal cybersecurity requirements.
-        </p>
-      </div>
-    </div>
-
-    <div class="callout callout-alert">
-      <div class="callout-title">The Real Reason Contractors Lose</div>
-      <div class="callout-body">
-        GovCon contractors do not lose bids because their technical engineering is weak; <strong>they lose because their capture teams run out of time</strong>. Notes from multiple engineers are pasted together at 2:00 AM before submission deadlines, resulting in disjointed narrative, unmapped RFP mandates, and inconsistent numbers.
-      </div>
-    </div>
-  </section>
-
-  <!-- 03: HOW IT WORKS -->
-  <section class="view-pane" id="c3">
-    <div class="pane-header">
-      <div class="pane-meta">
-        <span class="pane-num">SECTION 03</span>
-        <span class="pill pill-emerald">WORKFLOW</span>
-      </div>
-      <h1 class="pane-title">How the Platform Works: 6 Clean Stages</h1>
-      <p class="pane-subtitle">An end-to-end automated pipeline from raw solicitation to final deliverable.</p>
-    </div>
-
-    <div class="diagram-container">
-      <div class="node-flow">
-        <div class="node-box"><strong>Stage 1</strong><br>Solicitation Shredding</div>
-        <div class="node-arrow"></div>
-        <div class="node-box"><strong>Stage 2</strong><br>Requirements Lock</div>
-        <div class="node-arrow"></div>
-        <div class="node-box"><strong>Stage 3</strong><br>Company Data Match</div>
-      </div>
-      <div style="height: 16px;"></div>
-      <div class="node-flow">
-        <div class="node-box"><strong>Stage 4</strong><br>Automated Drafting</div>
-        <div class="node-arrow"></div>
-        <div class="node-box"><strong>Stage 5</strong><br>Cost & Compliance Audit</div>
-        <div class="node-arrow"></div>
-        <div class="node-box"><strong>Stage 6</strong><br>Word Document (.docx)</div>
-      </div>
-    </div>
-
-    <table class="data-table">
-      <thead>
-        <tr>
-          <th>Stage</th>
-          <th>Operational Action</th>
-          <th>Why It Matters</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><strong>Stage 1: Solicitation Shredding</strong></td>
-          <td>Ingests RFP Section C (Work Statement), Section L (Instructions), and Section M (Evaluation).</td>
-          <td>Breaks dense government PDFs into structured requirements in under 60 seconds.</td>
-        </tr>
-        <tr>
-          <td><strong>Stage 2: Requirements Lock</strong></td>
-          <td>Builds a 100% complete Requirements Traceability Matrix (RTM).</td>
-          <td>Guarantees every mandatory government clause has an assigned proposal section before drafting starts.</td>
-        </tr>
-        <tr>
-          <td><strong>Stage 3: Company Data Match</strong></td>
-          <td>Searches internal past performance citations, resumes, and Deltek labor categories.</td>
-          <td>Ensures every technical claim is backed by real, verified company qualifications.</td>
-        </tr>
-        <tr>
-          <td><strong>Stage 4: Automated Drafting</strong></td>
-          <td>Drafts high-scoring technical narrative with sub-second safety checks.</td>
-          <td>Cuts initial draft creation time from two weeks to under an hour.</td>
-        </tr>
-        <tr>
-          <td><strong>Stage 5: Cost & Compliance Audit</strong></td>
-          <td>Cross-checks narrative headcount and pricing against the cost model.</td>
-          <td>Ensures exact $0.00 match between cost tables and technical volume text.</td>
-        </tr>
-        <tr>
-          <td><strong>Stage 6: Word Document (.docx)</strong></td>
-          <td>Compiles directly into formatted Microsoft Word documents with headers and tables.</td>
-          <td>Produces clean, compliant deliverables ready for human review and submission.</td>
-        </tr>
-      </tbody>
-    </table>
-  </section>
-
-  <!-- 04: 100% REQUIREMENT COVERAGE -->
-  <section class="view-pane" id="c4">
-    <div class="pane-header">
-      <div class="pane-meta">
-        <span class="pane-num">CAPABILITY 01</span>
-        <span class="pill pill-gold">COMPLIANCE</span>
-      </div>
-      <h1 class="pane-title">100% Requirement Coverage Lock</h1>
-      <p class="pane-subtitle">Preventing proposal disqualification by mathematically tracking every government requirement.</p>
-    </div>
-
-    <div class="callout callout-success">
-      <div class="callout-title">The Compliance Guarantee</div>
-      <div class="callout-body">
-        In traditional capture, writers frequently overlook minor clauses buried in contract attachments (e.g., specific security training or reporting standards). The government evaluator finds a blank score sheet and issues a deficiency rating. Our system decomposes all "shall" and "must" statements into a database and locks drafting until 100% are mapped to the outline.
-      </div>
-    </div>
-
-    <div class="card-grid">
-      <div class="card">
-        <div class="card-title">Automated Clause Extraction</div>
-        <div class="card-text">
-          Parses federal solicitations and extracts every mandatory requirement with its specific reference number (e.g., Section C.3.4.1).
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-title">Order of Precedence Check</div>
-        <div class="card-text">
-          Identifies contradictions between Section L (Instructions) and Section M (Evaluation) per FAR 52.215-8, preventing compliance confusion.
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-title">Amendment Tracking</div>
-        <div class="card-text">
-          When the government issues solicitation amendments or Q&A changes, the system highlights exact text changes and flags affected sections.
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 05: COST VS TECHNICAL MATCH -->
-  <section class="view-pane" id="c5">
-    <div class="pane-header">
-      <div class="pane-meta">
-        <span class="pane-num">CAPABILITY 02</span>
-        <span class="pill pill-emerald">FINANCIAL INTEGRITY</span>
-      </div>
-      <h1 class="pane-title">Cost vs. Technical Volume Reconciliation</h1>
-      <p class="pane-subtitle">Eliminating discrepancies between pricing spreadsheets and technical volume narrative.</p>
-    </div>
-
-    <div class="callout callout-alert">
-      <div class="callout-title">The Common Cost Disconnect</div>
-      <div class="callout-body">
-        A proposal narrative states: <em>"We will dedicate 4 Senior Cyber Specialists on-site."</em> But the Cost Volume pricing model only budgets for <em>3 FTEs</em>. The contracting officer catches the mismatch and issues a cost realism penalty or disqualifies the proposal.
-      </div>
-    </div>
-
-    <div class="card-grid">
-      <div class="card">
-        <div class="card-title">Automated Number Extraction</div>
-        <div class="card-text">
-          The software scans technical narrative for headcount, labor categories, hours, and software licenses, extracting all quantitative claims.
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-title">Exact Dollar Verification</div>
-        <div class="card-text">
-          Compares extracted numbers directly against Deltek Costpoint spreadsheets. If there is a single dollar or fraction of an FTE difference, the platform flags the error immediately.
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-title">DCAA Audit Readiness</div>
-        <div class="card-text">
-          Produces a complete audit log proving that narrative commitments align with certified cost and pricing data.
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 06: AUTOMATED COMPLIANCE AUDIT -->
-  <section class="view-pane" id="c6">
-    <div class="pane-header">
-      <div class="pane-meta">
-        <span class="pane-num">CAPABILITY 03</span>
-        <span class="pill pill-gold">REVIEW AUDIT</span>
-      </div>
-      <h1 class="pane-title">Automated Compliance & Quality Audit</h1>
-      <p class="pane-subtitle">Simulating federal Source Selection Evaluation Board (SSEB) reviews before human Red Teams meet.</p>
-    </div>
-
-    <div class="callout">
-      <div class="callout-title">Unsparing Internal Audit</div>
-      <div class="callout-body">
-        Human review teams are often polite, exhausted, and influenced by internal politics. The platform runs an automated audit seeded with official federal evaluation standards (Strengths, Weaknesses, Significant Weaknesses, Deficiencies) to catch weak narrative before customers see it.
-      </div>
-    </div>
-
-    <table class="data-table">
-      <thead>
-        <tr>
-          <th>Rating Standard</th>
-          <th>Government SSEB Definition</th>
-          <th>Automated Platform Check</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><strong>Blue (Outstanding)</strong></td>
-          <td>Multiple significant strengths, zero weaknesses.</td>
-          <td>Audits for verified discriminators, metrics, and past performance citations.</td>
-        </tr>
-        <tr>
-          <td><strong>Purple (Good)</strong></td>
-          <td>Strengths outweigh weaknesses, low risk.</td>
-          <td>Confirms complete clause coverage with clear proof points.</td>
-        </tr>
-        <tr>
-          <td><strong>Green (Acceptable)</strong></td>
-          <td>Meets minimum requirements, acceptable risk.</td>
-          <td>Baseline requirement fulfillment.</td>
-        </tr>
-        <tr>
-          <td><strong>Red (Unacceptable)</strong></td>
-          <td>One or more Deficiencies present.</td>
-          <td><strong>HARD STOP</strong>: Flags any missing mandatory clause for immediate revision.</td>
-        </tr>
-      </tbody>
-    </table>
-  </section>
-
-  <!-- 07: MICROSOFT WORD GENERATOR -->
-  <section class="view-pane" id="c7">
-    <div class="pane-header">
-      <div class="pane-meta">
-        <span class="pane-num">CAPABILITY 04</span>
-        <span class="pill pill-emerald">OUTPUT QUALITY</span>
-      </div>
-      <h1 class="pane-title">Native Microsoft Word (.docx) Generation</h1>
-      <p class="pane-subtitle">Generating properly formatted Word documents with compliant tables, callouts, and headers.</p>
-    </div>
-
-    <div class="callout callout-cyan">
-      <div class="callout-title">Solving the Formatting Breakdown</div>
-      <div class="callout-body">
-        Most AI tools output simple Markdown text. When converting Markdown into Microsoft Word, complex multi-column compliance tables, callout boxes, headers, footers, and page margins collapse. Defense proposals must be submitted in Microsoft Word or PDF. Our platform compiles directly into native Word OpenXML (.docx) format with zero conversion flaws.
-      </div>
-    </div>
-
-    <div class="card-grid">
-      <div class="card">
-        <div class="card-title">Compliant Tables</div>
-        <div class="card-text">
-          Generates multi-column compliance matrices with shaded headers, bold lead-ins, and exact column widths.
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-title">CUI Banners & Headers</div>
-        <div class="card-text">
-          Automatically injects mandatory DoD Controlled Unclassified Information (CUI) running headers, footers, and distribution markings.
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-title">Page Budget Enforcement</div>
-        <div class="card-text">
-          Tracks word counts per section to ensure narrative fits strictly within government page limits.
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 08: ON-PREMISE SECURITY & CMMC -->
-  <section class="view-pane" id="c8">
-    <div class="pane-header">
-      <div class="pane-meta">
-        <span class="pane-num">SECURITY</span>
-        <span class="pill pill-gold">DATA PROTECTION</span>
-      </div>
-      <h1 class="pane-title">On-Premise Architecture & CMMC Level 2</h1>
-      <p class="pane-subtitle">Complete data sovereignty with zero external cloud transmission.</p>
-    </div>
-
-    <div class="card-grid">
-      <div class="card">
-        <div class="card-title">100% On-Premise Execution</div>
-        <div class="card-text">
-          All models, databases, and document tools run on standard servers inside the contractor's local facility. Zero telemetry or data leaves the building.
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-title">NIST SP 800-171 & CMMC 2.0</div>
-        <div class="card-text">
-          Eliminates cloud transmission compliance risk, allowing contractors to safely ingest sensitive labor rates, clearance records, and past performance.
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-title">Commodity Hardware</div>
-        <div class="card-text">
-          Runs on standard enterprise workstations or rack servers (Dell/AMD) with local GPU acceleration. No expensive proprietary cloud contracts required.
-        </div>
-      </div>
-    </div>
-
-    <div class="callout callout-success">
-      <div class="callout-title">The Enterprise Benefit</div>
-      <div class="callout-body">
-        Defense primes and mid-tiers can deploy this system directly inside their cleared or CUI enclaves. Capture staff can ingest proprietary data without triggering IT security violations or ITAR export issues.
-      </div>
-    </div>
-  </section>
-
-  <!-- 09: PRICING & ROI MODEL -->
-  <section class="view-pane" id="c9">
-    <div class="pane-header">
-      <div class="pane-meta">
-        <span class="pane-num">BUSINESS MODEL</span>
-        <span class="pill pill-emerald">COMMERCIAL VALUE</span>
-      </div>
-      <h1 class="pane-title">Commercial Pricing & Return on Investment</h1>
-      <p class="pane-subtitle">A sustainable software licensing model designed for defense contractor economics.</p>
-    </div>
-
-    <table class="data-table">
-      <thead>
-        <tr>
-          <th>Revenue Element</th>
-          <th>Fee Structure</th>
-          <th>Contractor Value Proposition</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><strong>Platform Installation & Onboarding</strong></td>
-          <td><strong>$35,000 – $50,000</strong> (One-time)</td>
-          <td>On-premise deployment, Deltek data ingestion, template customization, and staff training.</td>
-        </tr>
-        <tr>
-          <td><strong>Annual Software License</strong></td>
-          <td><strong>$6,000 – $8,500 / month</strong> ($72k–$100k/yr)</td>
-          <td>Software updates, regulatory clause updates, technical support. Replaces $250k+ in BD headcount cost.</td>
-        </tr>
-        <tr>
-          <td><strong>Performance Win Kicker (Optional)</strong></td>
-          <td><strong>0.5% – 1.0% of Won Contract Value</strong></td>
-          <td>Capped at $250k on awarded task orders. Aligns software value with contractor revenue wins.</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <div class="card-grid">
-      <div class="card">
-        <div class="card-title">Rapid Payback Period</div>
-        <div class="metric-stat">&lt; 60 Days</div>
-        <div class="metric-label">Typical Break-Even</div>
-        <p class="card-text" style="margin-top: 10px;">
-          A single $15M task order win enabled by this platform covers years of licensing costs in month one.
-        </p>
-      </div>
-
-      <div class="card">
-        <div class="card-title">Consulting Cost Reduction</div>
-        <div class="metric-stat">30–40%</div>
-        <div class="metric-label">Overhead Savings</div>
-        <p class="card-text" style="margin-top: 10px;">
-          Drastically reduces spending on outside proposal consultants ($150–$250/hr), lowering indirect G&A expenses.
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <!-- 10: KEY QUESTIONS FOR REVIEW -->
-  <section class="view-pane" id="c10">
-    <div class="pane-header">
-      <div class="pane-meta">
-        <span class="pane-num">STRATEGIC COUNSEL</span>
-        <span class="pill pill-gold">DECISION POINTS</span>
-      </div>
-      <h1 class="pane-title">Key Questions for Strategic Review</h1>
-      <p class="pane-subtitle">The core business and positioning questions to discuss with your advisor.</p>
-    </div>
-
-    <div class="card-grid">
-      <div class="card">
-        <div class="card-title"><span class="pill pill-gold">Question 1</span> Single Contractor Exclusivity vs. Market Licensing</div>
-        <p class="card-text">
-          <em>"If a contractor offers equity to lock this platform in exclusively, what is that equity realistically worth given defense services trade at 1.0x–1.5x revenue? Does it make more sense to keep the software IP in an independent LLC and license it, or surrender ownership for employee equity?"</em>
-        </p>
-      </div>
-
-      <div class="card">
-        <div class="card-title"><span class="pill pill-gold">Question 2</span> Market Appetite & Pricing Acceptance</div>
-        <p class="card-text">
-          <em>"Would mid-tier defense contractors pay $40k for installation plus $7k/month for an on-premise, secure proposal system that guarantees zero compliance drift? Or is the market still hesitant to adopt AI in capture operations?"</em>
-        </p>
-      </div>
-
-      <div class="card">
-        <div class="card-title"><span class="pill pill-gold">Question 3</span> Organizational Conflict of Interest (OCI)</div>
-        <p class="card-text">
-          <em>"If I serve as an executive at one defense contractor, how quickly do we trigger FAR 9.505 OCI issues if the software is used across bids where that company competes against other clients?"</em>
-        </p>
-      </div>
-
-      <div class="card">
-        <div class="card-title"><span class="pill pill-gold">Question 4</span> Preferred Positioning for Partnership</div>
-        <p class="card-text">
-          <em>"What is the cleanest structure to partner with an anchor contractor: grant them preferred licensing rights and joint win upside as the flagship proof point, while retaining 100% ownership of the underlying software?"</em>
-        </p>
-      </div>
-    </div>
-
-    <div class="callout callout-success">
-      <div class="callout-title">Recommended Path</div>
-      <div class="callout-body">
-        Retain 100% ownership of the software platform in an independent entity. Offer the primary contractor preferred anchor pricing and customized past performance integration to serve as the validated flagship deployment, while preserving your ability to license across the broader defense market.
-      </div>
-    </div>
-  </section>
-
-  <!-- BOTTOM PAGINATION -->
-  <div class="pagination-nav">
-    <button class="btn" id="prev-btn">← Previous Section</button>
-    <div style="font-family: var(--mono); font-size: 12px; color: var(--text-muted);" id="page-counter">Page 1 of 10</div>
-    <button class="btn btn-gold" id="next-btn">Next Section →</button>
   </div>
 
-</main>
+  <!-- WHAT WE BUILT (5 SIMPLE STEPS) -->
+  <div class="section-title">2. How The Software Works</div>
+  <div class="card" style="padding: 10px 20px;">
+    <div class="flow-step">
+      <div class="step-num">01</div>
+      <div class="step-content">
+        <h4>Reads the Solicitation</h4>
+        <p>Scans government RFP documents (Sections C, L, and M) and extracts every single mandatory requirement in 60 seconds.</p>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="step-num">02</div>
+      <div class="step-content">
+        <h4>Locks the Checklist</h4>
+        <p>Builds a 100% complete compliance matrix. Writing cannot start until every government requirement has an assigned section in the proposal outline.</p>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="step-num">03</div>
+      <div class="step-content">
+        <h4>Matches Past Performance</h4>
+        <p>Searches the company's past contracts, resumes, and Deltek labor categories to match real qualifications to the bid.</p>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="step-num">04</div>
+      <div class="step-content">
+        <h4>Drafts & Audits</h4>
+        <p>Drafts compliant technical sections, checks for weak language, and verifies that written staffing matches the pricing spreadsheet to the penny.</p>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="step-num">05</div>
+      <div class="step-content">
+        <h4>Builds the Word File (.docx)</h4>
+        <p>Creates a properly formatted Microsoft Word document with tables, headers, and required government distribution markings ready for executive review.</p>
+      </div>
+    </div>
+  </div>
 
-<script>
-  const navItems = document.querySelectorAll('.nav-item');
-  const panes = document.querySelectorAll('.view-pane');
-  const prevBtn = document.getElementById('prev-btn');
-  const nextBtn = document.getElementById('next-btn');
-  const pageCounter = document.getElementById('page-counter');
+  <!-- THE COMPARISON -->
+  <div class="section-title">3. The Bottom Line Comparison</div>
+  <table>
+    <thead>
+      <tr>
+        <th>Task</th>
+        <th>Traditional Process</th>
+        <th>With This Software</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Time to complete a bid</strong></td>
+        <td>14 to 21 days</td>
+        <td><strong>4 hours</strong></td>
+      </tr>
+      <tr>
+        <td><strong>Annual proposal capacity</strong></td>
+        <td>6 to 8 bids per team</td>
+        <td><strong>60 to 80 bids per year</strong></td>
+      </tr>
+      <tr>
+        <td><strong>Missed requirement rate</strong></td>
+        <td>15% to 20% human fatigue</td>
+        <td><strong>0% (Checked by code)</strong></td>
+      </tr>
+      <tr>
+        <td><strong>Cost vs. text errors</strong></td>
+        <td>Common spreadsheet mismatches</td>
+        <td><strong>$0.00 difference guaranteed</strong></td>
+      </tr>
+      <tr>
+        <td><strong>Data security</strong></td>
+        <td>Cloud AI risk / illegal for CUI</td>
+        <td><strong>100% on office server (Zero cloud)</strong></td>
+      </tr>
+    </tbody>
+  </table>
 
-  let currentIndex = 0;
-  const totalPages = panes.length;
+  <!-- BUSINESS MODEL -->
+  <div class="section-title">4. Pricing & Economics</div>
+  <div class="grid-2">
+    <div class="card">
+      <h3>License Model</h3>
+      <p style="margin-bottom: 8px;"><strong>$40,000</strong> one-time setup & installation.</p>
+      <p style="margin-bottom: 8px;"><strong>$7,000 / month</strong> ongoing software license.</p>
+      <p><strong>0.5% – 1%</strong> win bonus on awarded task orders.</p>
+    </div>
+    <div class="card">
+      <h3>Return on Investment</h3>
+      <p style="margin-bottom: 8px;">A single $10M–$15M task order win covers years of software costs in month one.</p>
+      <p>Cuts outside proposal consultant spending ($150–$250/hr) by 30% to 40%.</p>
+    </div>
+  </div>
 
-  function updatePage(index) {
-    if (index < 0 || index >= totalPages) return;
-    currentIndex = index;
+  <!-- THE 4 QUESTIONS FOR YOU -->
+  <div class="section-title">5. The Core Decisions to Discuss</div>
 
-    panes.forEach((p, idx) => {
-      p.classList.toggle('active', idx === currentIndex);
-    });
+  <div class="question-card">
+    <h4>Question 1: Exclusivity vs. Market Licensing</h4>
+    <p>"If GaN offers equity to make this exclusive, what is that realistically worth given defense services trade at low multiples (1x–1.5x revenue)? Does it make more sense to keep the software in my own LLC and license it, or trade it for employee equity?"</p>
+  </div>
 
-    navItems.forEach((n, idx) => {
-      n.classList.toggle('active', idx === currentIndex);
-    });
+  <div class="question-card">
+    <h4>Question 2: Market Appetite in Huntsville</h4>
+    <p>"Would your defense clients pay $40k setup + $7k/month for an on-premise system that cuts proposal time from 3 weeks to 4 hours and eliminates compliance mistakes?"</p>
+  </div>
 
-    pageCounter.textContent = `Page ${currentIndex + 1} of ${totalPages}`;
-    prevBtn.style.visibility = currentIndex === 0 ? 'hidden' : 'visible';
-    nextBtn.textContent = currentIndex === totalPages - 1 ? 'Finish Briefing' : 'Next Section →';
-    
-    document.getElementById('content-container').scrollTop = 0;
-  }
+  <div class="question-card">
+    <h4>Question 3: Conflict of Interest (OCI)</h4>
+    <p>"If I become an executive at GaN, how quickly do we trigger conflict-of-interest issues if GaN competes against your other contractor clients on bids?"</p>
+  </div>
 
-  navItems.forEach((item, idx) => {
-    item.addEventListener('click', () => updatePage(idx));
-  });
-
-  prevBtn.addEventListener('click', () => {
-    if (currentIndex > 0) updatePage(currentIndex - 1);
-  });
-
-  nextBtn.addEventListener('click', () => {
-    if (currentIndex < totalPages - 1) {
-      updatePage(currentIndex + 1);
-    } else {
-      updatePage(0);
-    }
-  });
-
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowRight' || e.key === 'PageDown') {
-      if (currentIndex < totalPages - 1) updatePage(currentIndex + 1);
-    } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
-      if (currentIndex > 0) updatePage(currentIndex - 1);
-    }
-  });
-
-  updatePage(0);
-</script>
+  <div class="question-card">
+    <h4>Question 4: The Best Deal Structure</h4>
+    <p>"Does it make the most sense to offer GaN preferred anchor pricing and custom support so they become the flagship success story, while I retain 100% ownership of the software?"</p>
+  </div>
 
 </body>
 </html>
