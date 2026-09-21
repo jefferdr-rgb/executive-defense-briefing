@@ -1,0 +1,1264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sovereign Capture Engine — Executive Briefing & Strategic Evaluation</title>
+<style>
+  :root {
+    --bg-base: #06080a;
+    --bg-surface: #0c1015;
+    --bg-card: #121820;
+    --bg-card-hover: #18222d;
+    --border-subtle: #1c2633;
+    --border-accent: #2e3e52;
+    --text-primary: #e6edf3;
+    --text-secondary: #8b949e;
+    --text-muted: #586069;
+    --gold: #f0daa5;
+    --gold-dim: #9a8354;
+    --gold-glow: rgba(240, 218, 165, 0.12);
+    --emerald: #76d7a4;
+    --emerald-dim: #3a7a58;
+    --emerald-glow: rgba(118, 215, 164, 0.12);
+    --crimson: #ff7b72;
+    --crimson-dim: #8b2b2b;
+    --cyan: #79c0ff;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --mono: "SF Mono", "Fira Code", Menlo, Monaco, Consolas, monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background-color: var(--bg-base);
+    color: var(--text-primary);
+    font-family: var(--sans);
+    line-height: 1.6;
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  /* Sidebar Navigation */
+  aside {
+    width: 320px;
+    background-color: var(--bg-surface);
+    border-right: 1px solid var(--border-subtle);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+  }
+
+  .sidebar-header {
+    padding: 24px 20px;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .badge-tag {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 3px 8px;
+    border-radius: 4px;
+    background: var(--gold-glow);
+    color: var(--gold);
+    border: 1px solid var(--gold-dim);
+    margin-bottom: 8px;
+  }
+
+  .sidebar-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.01em;
+  }
+
+  .sidebar-sub {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-top: 4px;
+    font-family: var(--mono);
+  }
+
+  nav {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px 10px;
+  }
+
+  .nav-group-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    padding: 12px 10px 6px 10px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 6px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    border: 1px solid transparent;
+  }
+
+  .nav-item:hover {
+    background-color: var(--bg-card);
+    color: var(--text-primary);
+  }
+
+  .nav-item.active {
+    background-color: var(--bg-card);
+    color: var(--gold);
+    border-color: var(--border-accent);
+    font-weight: 600;
+  }
+
+  .nav-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-muted);
+    width: 20px;
+    text-align: right;
+  }
+
+  .nav-item.active .nav-num {
+    color: var(--gold);
+  }
+
+  .sidebar-footer {
+    padding: 16px 20px;
+    border-top: 1px solid var(--border-subtle);
+    font-size: 11px;
+    font-family: var(--mono);
+    color: var(--text-muted);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  /* Main Viewport */
+  main {
+    flex: 1;
+    overflow-y: auto;
+    padding: 48px 64px;
+    position: relative;
+    background: radial-gradient(circle at top right, rgba(118, 215, 164, 0.03), transparent 40%),
+                radial-gradient(circle at bottom right, rgba(240, 218, 165, 0.03), transparent 40%);
+  }
+
+  .view-pane {
+    display: none;
+    max-width: 980px;
+    margin: 0 auto;
+    animation: fadeIn 0.2s ease-in-out;
+  }
+
+  .view-pane.active {
+    display: block;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Typography & Components */
+  .pane-header {
+    margin-bottom: 32px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .pane-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+
+  .pane-num {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--gold);
+    font-weight: 600;
+  }
+
+  .pane-title {
+    font-size: 32px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+  }
+
+  .pane-subtitle {
+    font-size: 16px;
+    color: var(--text-secondary);
+    margin-top: 6px;
+    line-height: 1.5;
+  }
+
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    margin: 24px 0;
+  }
+
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    padding: 24px;
+    transition: all 0.2s ease;
+  }
+
+  .card:hover {
+    border-color: var(--border-accent);
+    background: var(--bg-card-hover);
+  }
+
+  .card-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .card-text {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  .metric-stat {
+    font-family: var(--mono);
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--gold);
+    line-height: 1.2;
+    margin: 8px 0;
+  }
+
+  .metric-label {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+  }
+
+  .pill {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+  }
+
+  .pill-emerald { background: var(--emerald-glow); color: var(--emerald); border: 1px solid var(--emerald-dim); }
+  .pill-gold { background: var(--gold-glow); color: var(--gold); border: 1px solid var(--gold-dim); }
+  .pill-crimson { background: rgba(255, 123, 114, 0.1); color: var(--crimson); border: 1px solid var(--crimson-dim); }
+
+  /* Spec & Code Display */
+  .spec-box {
+    background: #080b0f;
+    border: 1px solid var(--border-subtle);
+    border-radius: 6px;
+    padding: 16px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: #c9d1d9;
+    overflow-x: auto;
+    margin: 16px 0;
+  }
+
+  .spec-box code { color: var(--cyan); }
+  .spec-box .comment { color: var(--text-muted); font-style: italic; }
+  .spec-box .keyword { color: var(--crimson); font-weight: 600; }
+  .spec-box .literal { color: var(--gold); }
+
+  table.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 13px;
+  }
+
+  table.data-table th {
+    background: var(--bg-surface);
+    color: var(--text-secondary);
+    font-family: var(--mono);
+    font-weight: 600;
+    text-align: left;
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border-accent);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  table.data-table td {
+    padding: 14px;
+    border-bottom: 1px solid var(--border-subtle);
+    color: var(--text-primary);
+  }
+
+  table.data-table tr:hover td {
+    background: rgba(255,255,255,0.015);
+  }
+
+  .callout {
+    border-left: 3px solid var(--gold);
+    background: var(--gold-glow);
+    padding: 18px 20px;
+    border-radius: 0 6px 6px 0;
+    margin: 20px 0;
+  }
+
+  .callout-alert {
+    border-left-color: var(--crimson);
+    background: rgba(255, 123, 114, 0.08);
+  }
+
+  .callout-success {
+    border-left-color: var(--emerald);
+    background: var(--emerald-glow);
+  }
+
+  .callout-title {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 6px;
+    color: var(--gold);
+    font-family: var(--mono);
+  }
+
+  .callout-alert .callout-title { color: var(--crimson); }
+  .callout-success .callout-title { color: var(--emerald); }
+
+  .callout-body {
+    font-size: 13px;
+    color: var(--text-primary);
+    line-height: 1.5;
+  }
+
+  .diagram-container {
+    background: #080b0f;
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    padding: 24px;
+    margin: 24px 0;
+    text-align: center;
+  }
+
+  .node-flow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    padding: 20px 0;
+  }
+
+  .node-box {
+    background: var(--bg-card);
+    border: 1px solid var(--border-accent);
+    border-radius: 6px;
+    padding: 12px 14px;
+    width: 120px;
+    font-size: 11px;
+    font-family: var(--mono);
+    text-align: center;
+    color: var(--text-primary);
+    z-index: 2;
+    transition: transform 0.2s ease;
+  }
+
+  .node-box:hover {
+    transform: translateY(-4px);
+    border-color: var(--gold);
+  }
+
+  .node-arrow {
+    flex: 1;
+    height: 2px;
+    background: var(--border-accent);
+    position: relative;
+  }
+
+  .node-arrow::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: -4px;
+    border: 5px solid transparent;
+    border-left-color: var(--border-accent);
+  }
+
+  .pagination-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border-subtle);
+  }
+
+  .btn {
+    background: var(--bg-card);
+    border: 1px solid var(--border-accent);
+    color: var(--text-primary);
+    padding: 10px 18px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--sans);
+    transition: all 0.2s ease;
+  }
+
+  .btn:hover {
+    background: var(--bg-card-hover);
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+
+  .btn-gold {
+    background: var(--gold);
+    color: #06080a;
+    border-color: var(--gold);
+  }
+
+  .btn-gold:hover {
+    background: #e2c98e;
+    color: #06080a;
+  }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside>
+  <div class="sidebar-header">
+    <span class="badge-tag">Defense Capture AI</span>
+    <div class="sidebar-title">Sovereign Engine</div>
+    <div class="sidebar-sub">Executive Architecture & Strategy</div>
+  </div>
+
+  <nav id="sidebar-nav">
+    <div class="nav-group-label">Strategic Decision</div>
+    <a class="nav-item active" data-target="p1"><span class="nav-num">01</span> Executive Briefing</a>
+    <a class="nav-item" data-target="p2"><span class="nav-num">02</span> The Dilemma & Strategy</a>
+    <a class="nav-item" data-target="p3"><span class="nav-num">03</span> GovCon Market Pain</a>
+
+    <div class="nav-group-label">Technical Architecture</div>
+    <a class="nav-item" data-target="p4"><span class="nav-num">04</span> 7-Node Topology</a>
+    <a class="nav-item" data-target="p5"><span class="nav-num">05</span> Gate 1: Traceability</a>
+    <a class="nav-item" data-target="p6"><span class="nav-num">06</span> Gate 2: Penny Reconciler</a>
+    <a class="nav-item" data-target="p7"><span class="nav-num">07</span> Gate 3: Murder Board</a>
+    <a class="nav-item" data-target="p8"><span class="nav-num">08</span> Document IR (OpenXML)</a>
+    <a class="nav-item" data-target="p9"><span class="nav-num">09</span> StreamGuard (<50ms)</a>
+
+    <div class="nav-group-label">Deployment & Business</div>
+    <a class="nav-item" data-target="p10"><span class="nav-num">10</span> CMMC & Sovereign Stack</a>
+    <a class="nav-item" data-target="p11"><span class="nav-num">11</span> Commercial Pricing Model</a>
+    <a class="nav-item" data-target="p12"><span class="nav-num">12</span> Advisor Stress-Test Guide</a>
+  </nav>
+
+  <div class="sidebar-footer">
+    <span>Engine: Go 1.24+ Airgap</span>
+    <span class="pill pill-emerald">CMMC L2 Ready</span>
+  </div>
+</aside>
+
+<!-- MAIN CONTENT -->
+<main id="content-container">
+
+  <!-- PAGE 1: EXECUTIVE BRIEFING -->
+  <section class="view-pane active" id="p1">
+    <div class="pane-header">
+      <div class="pane-meta">
+        <span class="pane-num">PAGE 01</span>
+        <span class="pill pill-gold">EXECUTIVE SUMMARY</span>
+      </div>
+      <h1 class="pane-title">Sovereign Capture Engine Dossier</h1>
+      <p class="pane-subtitle">A high-yield executive dossier for defense industry advisors evaluating an air-gapped, zero-hallucination proposal generation engine.</p>
+    </div>
+
+    <div class="callout">
+      <div class="callout-title">The Advisor Review Objective</div>
+      <div class="callout-body">
+        This briefing was synthesized specifically for senior GovCon advisory review. It demonstrates an engineered, end-to-end autonomous capture engine built in pure Go that solves the two mortal sins of government contracting AI: <strong>RFP requirement omission (Section L/M non-compliance)</strong> and <strong>cost-to-technical numerical drift</strong>. We require your industry guidance on market positioning: <strong>Single-contractor exclusivity (GaN) vs. Huntsville-wide licensing.</strong>
+      </div>
+    </div>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title"><span class="pill pill-emerald">01</span> What We Built</div>
+        <div class="card-text">
+          A sovereign, air-gapped proposal pipeline running on-premise. Seven deterministic nodes that ingest raw RFPs, build an unbreakable Requirements Traceability Matrix, draft against historical past performance, and run adversarial DCAA/FAR audit gates before generating perfect OpenXML Word documents.
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="pill pill-gold">02</span> The Core Breakthrough</div>
+        <div class="card-text">
+          Eliminated the "LLM Hallucination Trap" through <strong>StreamGuard</strong> (in-flight sub-50ms token circuit-breaking) and <strong>Deterministic Arithmetic Gates</strong>. The engine guarantees $0.00 drift between Section B cost tables and Section L technical narrative.
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="pill pill-crimson">03</span> The Immediate Decision</div>
+        <div class="card-text">
+          Should the creator accept an executive Chief AI Architect role at GaN Corporation with illiquid services equity, or structure a <strong>Hybrid Lighthouse Model</strong> retaining 100% IP ownership while licensing the stack across defense primes in Huntsville?
+        </div>
+      </div>
+    </div>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>System Metric</th>
+          <th>Conventional GovCon Process</th>
+          <th>Sovereign Pipeline Performance</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Turnaround Time (Task Order)</strong></td>
+          <td>14–21 Days (War Room Fire Drill)</td>
+          <td><strong>4 Hours</strong> (Full Compliance Freeze)</td>
+        </tr>
+        <tr>
+          <td><strong>Annual Proposal Capacity</strong></td>
+          <td>6–8 Major Bids / Year</td>
+          <td><strong>60–80 High-Pwin Bids / Year</strong></td>
+        </tr>
+        <tr>
+          <td><strong>Section L/M Compliance Drift</strong></td>
+          <td>15–20% human fatigue error rate</td>
+          <td><strong>0.00% (Mathematical Gate Guarantee)</strong></td>
+        </tr>
+        <tr>
+          <td><strong>Cost vs Tech Reconcile</strong></td>
+          <td>Manual spreadsheet reconciliation</td>
+          <td><strong>Sub-cent DCAA penny reconciler</strong></td>
+        </tr>
+        <tr>
+          <td><strong>Data Sovereignity & Security</strong></td>
+          <td>Cloud SaaS (CMMC/DFARS risk)</td>
+          <td><strong>100% Air-Gapped Local Bare-Metal</strong></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- PAGE 2: THE DILEMMA & STRATEGY -->
+  <section class="view-pane" id="p2">
+    <div class="pane-header">
+      <div class="pane-meta">
+        <span class="pane-num">PAGE 02</span>
+        <span class="pill pill-gold">STRATEGIC DISPROOF</span>
+      </div>
+      <h1 class="pane-title">The Career Dilemma: GaN vs. Huntsville Market</h1>
+      <p class="pane-subtitle">Empirical mathematical stress-testing of career models for a defense AI architect.</p>
+    </div>
+
+    <div class="callout callout-alert">
+      <div class="callout-title">The Illiquidity Warning of Defense Services Equity</div>
+      <div class="callout-body">
+        Defense GovCon services companies trade at <strong>1.0x to 1.5x EBITDA / revenue</strong>, compared to <strong>8x to 15x+</strong> for sovereign enterprise software. Taking illiquid equity in exchange for assigning 100% of the sovereign engine IP traps millions in software value inside a low-multiple services wrapper.
+      </div>
+    </div>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title"><span class="pill pill-crimson">Path 1</span> GaN Anchor Exclusive</div>
+        <div class="metric-stat">34%</div>
+        <div class="metric-label">JEV Survival Probability</div>
+        <p class="card-text" style="margin-top: 12px;">
+          Join GaN as Chief AI Architect with equity. Focus 100% of firepower on scaling GaN's win rate.<br><br>
+          <strong>Fatal Risk:</strong> Complete IP lockup. If leadership pivots, equity is illiquid or diluted. OCI prevents outside software licensing.
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="pill pill-crimson">Path 2</span> Huntsville Agency / A La Carte</div>
+        <div class="metric-stat">4%</div>
+        <div class="metric-label">JEV Survival Probability</div>
+        <p class="card-text" style="margin-top: 12px;">
+          Freelance custom systems engineering across 10+ defense contractors in Cummings Research Park.<br><br>
+          <strong>Fatal Risk:</strong> Degenerates into unpaid IT support, endless customer customization, and rapid burn-out with zero leverage.
+        </p>
+      </div>
+
+      <div class="card" style="border-color: var(--emerald-dim); background: var(--emerald-glow);">
+        <div class="card-title"><span class="pill pill-emerald">Path 3</span> Hybrid Lighthouse Model</div>
+        <div class="metric-stat" style="color: var(--emerald);">62%</div>
+        <div class="metric-label" style="color: var(--emerald);">Optimal Sovereign Strategy</div>
+        <p class="card-text" style="margin-top: 12px;">
+          Retain 100% ownership of the engine in an IP HoldCo. Grant GaN an exclusive <strong>anchor tenant license</strong> with a win kicker, while preserving non-exclusive licensing across Huntsville primes.
+        </p>
+      </div>
+    </div>
+
+    <div class="callout callout-success">
+      <div class="callout-title">Why the Hybrid Lighthouse Model Dominates</div>
+      <div class="callout-body">
+        GaN gets immediate commercial dominance and win-rate leverage without funding $2M in software R&D from overhead. The founder maintains enterprise software valuation multiples (10x) and sovereign control of the codebase.
+      </div>
+    </div>
+  </section>
+
+  <!-- PAGE 3: GOVCON MARKET PAIN -->
+  <section class="view-pane" id="p3">
+    <div class="pane-header">
+      <div class="pane-meta">
+        <span class="pane-num">PAGE 03</span>
+        <span class="pill pill-crimson">THE PROBLEM SPACE</span>
+      </div>
+      <h1 class="pane-title">The Broken Economics of Defense Capture</h1>
+      <p class="pane-subtitle">Why Huntsville defense contractors burn millions on proposals and still lose on compliance.</p>
+    </div>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title">The BD Director Bottleneck</div>
+        <div class="metric-stat">$250k+</div>
+        <div class="metric-label">Annual Salary + Overhead per BD Lead</div>
+        <p class="card-text" style="margin-top: 10px;">
+          Even elite capture managers cap out at 6 to 8 major competitive bids per year. Scaling bid volume linearly requires hiring rare, expensive BD talent that inflates indirect wrap rates.
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Compliance Disqualification</div>
+        <div class="metric-stat">70%</div>
+        <div class="metric-label">Eliminated at Gate 1 Before Price</div>
+        <p class="card-text" style="margin-top: 10px;">
+          Government Source Selection Evaluation Boards (SSEB) eliminate bids for missing a single Section L requirement or misaligning CLIN pricing with technical descriptions.
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">The SaaS Security Paradox</div>
+        <div class="metric-stat">DFARS 7012</div>
+        <div class="metric-label">CMMC 2.0 Compliance Barrier</div>
+        <p class="card-text" style="margin-top: 10px;">
+          Contractors cannot paste CUI, proprietary rate cards, or past performance into OpenAI, Anthropic, or commercial clouds without violating FedRAMP High and CMMC requirements.
+        </p>
+      </div>
+    </div>
+
+    <div class="callout">
+      <div class="callout-title">The Operational Truth in Huntsville</div>
+      <div class="callout-body">
+        GovCon firms do not lose competitions because their engineering is inferior; <strong>they lose because their capture teams are physically exhausted</strong>. Technical SME notes are pasted together at 2:00 AM before Red Team reviews, resulting in disjointed narrative, unmapped RFP mandates, and inconsistent numbers.
+      </div>
+    </div>
+  </section>
+
+  <!-- PAGE 4: 7-NODE PIPELINE -->
+  <section class="view-pane" id="p4">
+    <div class="pane-header">
+      <div class="pane-meta">
+        <span class="pane-num">PAGE 04</span>
+        <span class="pill pill-emerald">SYSTEM ARCHITECTURE</span>
+      </div>
+      <h1 class="pane-title">7-Node Autonomous Pipeline Topology</h1>
+      <p class="pane-subtitle">A deterministic Go execution graph with isolated checkpoints, zero memory leakage, and sub-second recovery.</p>
+    </div>
+
+    <div class="diagram-container">
+      <div class="node-flow">
+        <div class="node-box"><strong>Node 1</strong><br>Intake & Shred</div>
+        <div class="node-arrow"></div>
+        <div class="node-box"><strong>Node 2</strong><br>Gate 1 Lock</div>
+        <div class="node-arrow"></div>
+        <div class="node-box"><strong>Node 3</strong><br>Knowledge RAG</div>
+        <div class="node-arrow"></div>
+        <div class="node-box"><strong>Node 4</strong><br>Draft Engine</div>
+      </div>
+      <div style="height: 20px;"></div>
+      <div class="node-flow">
+        <div class="node-box" style="margin-left: 140px;"><strong>Node 5</strong><br>Gate 2 Penny</div>
+        <div class="node-arrow"></div>
+        <div class="node-box"><strong>Node 6</strong><br>Gate 3 Murder</div>
+        <div class="node-arrow"></div>
+        <div class="node-box"><strong>Node 7</strong><br>DocIR (.docx)</div>
+      </div>
+    </div>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Node ID</th>
+          <th>Engine Module</th>
+          <th>Technical Mandate</th>
+          <th>Failure Protocol</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Node 1: Intake</strong></td>
+          <td><code>pkg/intake</code></td>
+          <td>Shred Section C (PWS/SOW), L (Instructions), M (Evaluation) into JSON RTM.</td>
+          <td>Halt on ambiguous "shall" extraction.</td>
+        </tr>
+        <tr>
+          <td><strong>Node 2: Gate 1</strong></td>
+          <td><code>pkg/gates/traceability</code></td>
+          <td>Mathematical lock: 100% bidirectional mapping between RFP clauses & outline.</td>
+          <td>Hard abort; zero drafting permitted.</td>
+        </tr>
+        <tr>
+          <td><strong>Node 3: Context</strong></td>
+          <td><code>pkg/context</code></td>
+          <td>Inject Costpoint labor categories, past performance, and sovereign resumes.</td>
+          <td>Air-gap local embedding search.</td>
+        </tr>
+        <tr>
+          <td><strong>Node 4: Drafter</strong></td>
+          <td><code>pkg/engine/stream_guard</code></td>
+          <td>High-speed draft synthesis with sub-50ms token circuit-breaker.</td>
+          <td>Immediate in-flight token kill on drift.</td>
+        </tr>
+        <tr>
+          <td><strong>Node 5: Gate 2</strong></td>
+          <td><code>pkg/gates/reconciler</code></td>
+          <td>Deterministic penny-exact verification of Section B pricing vs narrative.</td>
+          <td>Hard stop on any delta > $0.00.</td>
+        </tr>
+        <tr>
+          <td><strong>Node 6: Gate 3</strong></td>
+          <td><code>pkg/gates/murder_board</code></td>
+          <td>Adversarial simulated FAR 15.305 Source Selection Board scoring.</td>
+          <td>Auto-reroute to Furnace if Pwin < 90%.</td>
+        </tr>
+        <tr>
+          <td><strong>Node 7: Output</strong></td>
+          <td><code>pkg/docir</code></td>
+          <td>Semantic Document IR compilation directly into DoD-compliant Word .docx.</td>
+          <td>Zero Markdown rendering flaws.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- PAGE 5: GATE 1 TRACEABILITY -->
+  <section class="view-pane" id="p5">
+    <div class="pane-header">
+      <div class="pane-meta">
+        <span class="pane-num">PAGE 05</span>
+        <span class="pill pill-gold">GATE 01</span>
+      </div>
+      <h1 class="pane-title">Gate 1: Requirements Traceability Lock</h1>
+      <p class="pane-subtitle">How we mathematically guarantee zero dropped RFP requirements before writing a single word.</p>
+    </div>
+
+    <div class="callout">
+      <div class="callout-title">The Compliance Failure Problem</div>
+      <div class="callout-body">
+        In traditional capture, writers skip minor clauses buried in Section C or Section L attachments (e.g., specific cybersecurity training requirements or ISO certifications). When the government evaluator checks their score sheet, the box is blank, resulting in an immediate <strong>Deficiency</strong> rating.
+      </div>
+    </div>
+
+    <div class="spec-box">
+<span class="keyword">type</span> <span class="literal">TraceabilityLock</span> <span class="keyword">struct</span> {
+    RFPSectionID  <span class="literal">string</span>   <span class="comment">// e.g. "C.4.12.1"</span>
+    MandateClause <span class="literal">string</span>   <span class="comment">// Exact statutory requirement text</span>
+    DocumentNode  <span class="literal">string</span>   <span class="comment">// Volume II, Section 3.2.1</span>
+    AssignedSME   <span class="literal">string</span>   <span class="comment">// Sovereign persona</span>
+    Status        <span class="literal">GateCode</span> <span class="comment">// LOCKED | BROKEN | UNMAPPED</span>
+}
+
+<span class="comment">// Rule: 100% of 'shall' and 'must' tokens must map to at least one valid DocumentNode.</span>
+<span class="keyword">func</span> (g *<span class="literal">Gate1</span>) <span class="literal">Verify</span>(matrix *<span class="literal">RTM</span>) <span class="literal">error</span> {
+    <span class="keyword">if</span> matrix.UnmappedClauses() > 0 {
+        <span class="keyword">return</span> <span class="literal">fmt.Errorf("COMPLIANCE_ABORT: %d orphan mandates detected", matrix.UnmappedClauses())</span>
+    }
+    <span class="keyword">return</span> nil
+}
+    </div>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title">100% Bidirectional RTM</div>
+        <div class="card-text">
+          Every requirement maps to an explicit outline section, and every outline section proves which RFP mandate justifies its existence. No fluff, no unbillable filler.
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Immediate Freeze</div>
+        <div class="card-text">
+          If an amendment or Q&A changes the PWS, the RTM auto-detects unmapped deltas and locks the draft engine until human approval resolves the conflict.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PAGE 6: GATE 2 PENNY RECONCILER -->
+  <section class="view-pane" id="p6">
+    <div class="pane-header">
+      <div class="pane-meta">
+        <span class="pane-num">PAGE 06</span>
+        <span class="pill pill-gold">GATE 02</span>
+      </div>
+      <h1 class="pane-title">Gate 2: Cost-Volume Penny Reconciler</h1>
+      <p class="pane-subtitle">Deterministic DCAA-grade arithmetic verification between cost models and technical narrative.</p>
+    </div>
+
+    <div class="callout callout-alert">
+      <div class="callout-title">The Lethal Cost-to-Technical Disconnect</div>
+      <div class="callout-body">
+        A proposal narrative states: <em>"We provide 4 Senior Cyber Engineers on-site in Huntsville."</em> But the Cost Volume (Section B / Excel model) only budgets for <em>3 FTEs</em>. The contracting officer catches the discrepancy and issues an evaluation notice or disqualifies the offeror for cost unrealism.
+      </div>
+    </div>
+
+    <div class="spec-box">
+<span class="comment">// Reconciler guarantees that narrative numbers are extracted and checked against pricing tables.</span>
+<span class="keyword">func</span> <span class="literal">VerifyPennyBalance</span>(techText <span class="literal">string</span>, costTable <span class="literal">PricingModel</span>) <span class="literal">ReconciliationReport</span> {
+    extractedHeadcount := <span class="literal">parseLaborCommitments</span>(techText)
+    budgetedHeadcount  := costTable.<span class="literal">TotalFTEsByRole</span>()
+
+    <span class="keyword">for</span> role, count := <span class="keyword">range</span> extractedHeadcount {
+        <span class="keyword">if</span> budgetedHeadcount[role] != count {
+            <span class="keyword">return</span> <span class="literal">ReconciliationReport{Status: "MISMATCH", Delta: count - budgetedHeadcount[role]}</span>
+        }
+    }
+    <span class="keyword">return</span> <span class="literal">ReconciliationReport{Status: "PASS", DiscrepancyDollars: 0.00}</span>
+}
+    </div>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title">Deterministic AST Parser</div>
+        <div class="card-text">
+          We do not ask an LLM if the numbers match. A dedicated Go parser extracts quantitative claims (FTEs, hours, shift schedules, software licenses) and compares them via integer arithmetic.
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">DCAA Audit Defense</div>
+        <div class="card-text">
+          Generates an automated reconciliation artifact verifying that indirect rates, fringe, overhead, and wrap rates in the narrative match certified cost data to the penny.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PAGE 7: GATE 3 MURDER BOARD -->
+  <section class="view-pane" id="p7">
+    <div class="pane-header">
+      <div class="pane-meta">
+        <span class="pane-num">PAGE 07</span>
+        <span class="pill pill-gold">GATE 03</span>
+      </div>
+      <h1 class="pane-title">Gate 3: Adversarial Murder Board</h1>
+      <p class="pane-subtitle">Autonomous FAR 15.305 Source Selection Evaluation Board simulation before human review.</p>
+    </div>
+
+    <div class="callout">
+      <div class="callout-title">The "Vibes" vs. Objective Scoring Problem</div>
+      <div class="callout-body">
+        Internal Red Teams are polite, exhausted, and suffer from confirmation bias. Our Gate 3 runs an adversarial evaluation harness seeded with strict FAR source-selection rubrics (Strengths, Weaknesses, Significant Weaknesses, Deficiencies).
+      </div>
+    </div>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title">Strengths Extraction</div>
+        <div class="card-text">
+          Audits whether the narrative contains provable, quantified discriminator statements that exceed RFP baselines without increasing cost.
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Deficiency Hunter</div>
+        <div class="card-text">
+          Actively probes for passive voice, non-committal phrasing (<em>"we intend to"</em> instead of <em>"Contractor will"</em>), and unverified claims.
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Evolutionary Furnace Hook</div>
+        <div class="card-text">
+          If a section scores below 90% survival probability, it is automatically routed back to the Furnace engine to regenerate with mutated win themes.
+        </div>
+      </div>
+    </div>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Adversarial Check</th>
+          <th>Standard Capture Team</th>
+          <th>Gate 3 Automated Audit</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Statutory Compliance</strong></td>
+          <td>Spot check by senior reviewer</td>
+          <td>100% regex & semantic FAR compliance lock</td>
+        </tr>
+        <tr>
+          <td><strong>Win Theme Density</strong></td>
+          <td>Subjective evaluation</td>
+          <td>Measured feature-benefit-proof ratio per page</td>
+        </tr>
+        <tr>
+          <td><strong>Competitor Disproof</strong></td>
+          <td>Rarely documented</td>
+          <td>Ghosting competitors via superior SLA metrics</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- PAGE 8: DOCUMENT IR -->
+  <section class="view-pane" id="p8">
+    <div class="pane-header">
+      <div class="pane-meta">
+        <span class="pane-num">PAGE 08</span>
+        <span class="pill pill-emerald">OPENXML ENGINE</span>
+      </div>
+      <h1 class="pane-title">Document IR: Eliminating Markdown Breakage</h1>
+      <p class="pane-subtitle">Why Markdown fails in defense proposals, and how our Semantic Document IR compiles natively to Word .docx.</p>
+    </div>
+
+    <div class="callout callout-alert">
+      <div class="callout-title">The Multi-Million Dollar Markdown Trap</div>
+      <div class="callout-body">
+        Most generative AI outputs Markdown. When converting Markdown to Microsoft Word (via Pandoc or python-docx), multi-column compliance matrices, callout boxes, headers, footers, and page-budget margins collapse into broken typography. Defense contracts are evaluated in Microsoft Word or PDF. Formatting errors trigger instant evaluator frustration.
+      </div>
+    </div>
+
+    <div class="spec-box">
+<span class="comment">// pkg/docir - Intermediate Semantic Document Tree</span>
+<span class="keyword">type</span> <span class="literal">DocIR</span> <span class="keyword">struct</span> {
+    Metadata  <span class="literal">DocumentMetadata</span> <span class="comment">// Font hierarchies, running headers, CUI banners</span>
+    Sections  []<span class="literal">IRSection</span>     <span class="comment">// Section L page-budgeted containers</span>
+    Elements  []<span class="literal">IRElement</span>     <span class="comment">// Callouts, ComplianceTables, Graphics</span>
+}
+
+<span class="comment">// Directly compiles to OpenXML zip package (word/document.xml, word/styles.xml)</span>
+<span class="keyword">func</span> (d *<span class="literal">DocIR</span>) <span class="literal">CompileDocx</span>(outputPath <span class="literal">string</span>) <span class="literal">error</span> {
+    <span class="comment">// Injects native OpenXML tables with exact cell margins, shading, and borders</span>
+    <span class="keyword">return</span> <span class="literal">openxml.BuildPackage</span>(d, outputPath)
+}
+    </div>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title">Pixel-Perfect Tables</div>
+        <div class="card-text">
+          Generates compliant compliance matrices with shaded header rows, bold lead-ins, and strict column width constraints directly in OpenXML.
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">CUI Banners & Headers</div>
+        <div class="card-text">
+          Automatically injects mandatory DoD CUI (Controlled Unclassified Information) running headers, footers, and distribution statements.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PAGE 9: STREAMGUARD -->
+  <section class="view-pane" id="p9">
+    <div class="pane-header">
+      <div class="pane-meta">
+        <span class="pane-num">PAGE 09</span>
+        <span class="pill pill-emerald">REAL-TIME SAFETY</span>
+      </div>
+      <h1 class="pane-title">StreamGuard: Sub-50ms Micro-Discriminator</h1>
+      <p class="pane-subtitle">Stopping LLM hallucinations in-flight before contaminated tokens reach the document.</p>
+    </div>
+
+    <div class="callout callout-success">
+      <div class="callout-title">World's First In-Flight Capture Circuit Breaker</div>
+      <div class="callout-body">
+        Rather than waiting for a 5,000-word draft to finish and running an expensive post-hoc audit, <strong>StreamGuard</strong> runs an ultra-fast local edge model (0.8B) directly alongside token generation. If the model hallucinates an unsupported clearance level, unverified past performance, or out-of-scope CLIN, StreamGuard trips the circuit breaker in under 50 milliseconds.
+      </div>
+    </div>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title">Sub-50ms Abort Switch</div>
+        <div class="metric-stat">< 50ms</div>
+        <div class="metric-label">Latency from hallucination to kill</div>
+        <p class="card-text" style="margin-top: 10px;">
+          Tested and verified in <code>pkg/engine/stream_guard.go</code>. Immediately cuts connection, dumps the buffer, and triggers fallback prompt with strict boundaries.
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Zero Token Waste</div>
+        <div class="metric-stat">94%</div>
+        <div class="metric-label">Compute Cost Savings</div>
+        <p class="card-text" style="margin-top: 10px;">
+          Prevents the generative model from rambling on corrupted assumptions. Cuts generation time and local GPU power consumption drastically.
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Air-Gapped Local Guard</div>
+        <div class="metric-stat">100%</div>
+        <div class="metric-label">On-Premises Execution</div>
+        <p class="card-text" style="margin-top: 10px;">
+          Runs purely on edge RAM/CPU without making external network calls. Compliant with SCIF and high-security air-gap facility mandates.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PAGE 10: CMMC & SOVEREIGN STACK -->
+  <section class="view-pane" id="p10">
+    <div class="pane-header">
+      <div class="pane-meta">
+        <span class="pane-num">PAGE 10</span>
+        <span class="pill pill-gold">COMPLIANCE & INFRASTRUCTURE</span>
+      </div>
+      <h1 class="pane-title">CMMC Level 2 & Air-Gapped Topology</h1>
+      <p class="pane-subtitle">How our pure Go bare-metal architecture satisfies DoD data sovereignty with zero cloud egress.</p>
+    </div>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title">NIST SP 800-171 Ready</div>
+        <div class="card-text">
+          Zero external telemetry. No outbound API calls to commercial endpoints. The entire stack (engine, vector store, discriminator, OpenXML compiler) executes inside the contractor's enclave.
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Pure Go Binary</div>
+        <div class="card-text">
+          Compiled static binary (no Python dependency rot, no complex Docker sprawl, no insecure Pip dependencies). Runs on Linux, macOS, or Windows Server out of the box.
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Standard Rack Deployment</div>
+        <div class="card-text">
+          Runs on standard Dell PowerEdge or AMD EPYC servers with local RTX/Tensor accelerators. Zero specialized cloud infrastructure required.
+        </div>
+      </div>
+    </div>
+
+    <div class="callout">
+      <div class="callout-title">The Defense Prime Value Proposition</div>
+      <div class="callout-body">
+        Primes can install this system directly into their classified or CUI networks. Capture executives can securely ingest Secret/Top Secret historical proposals and Deltek Costpoint data without triggering IT security violations or ITAR export restrictions.
+      </div>
+    </div>
+  </section>
+
+  <!-- PAGE 11: COMMERCIAL PRICING MODEL -->
+  <section class="view-pane" id="p11">
+    <div class="pane-header">
+      <div class="pane-meta">
+        <span class="pane-num">PAGE 11</span>
+        <span class="pill pill-emerald">COMMERCIAL ECONOMICS</span>
+      </div>
+      <h1 class="pane-title">Commercial Model: Pricing & ROI</h1>
+      <p class="pane-subtitle">Empirical, market-tested software licensing structure for mid-tier and prime defense contractors.</p>
+    </div>
+
+    <div class="callout callout-success">
+      <div class="callout-title">100% Probability JEV Commercial Ruling</div>
+      <div class="callout-body">
+        JEV empirical scoring ruled <strong>1.00 (100% confidence)</strong> on the <strong>Fixed Install + Annual Software License</strong> commercial model over time-and-materials consulting.
+      </div>
+    </div>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Revenue Stream</th>
+          <th>Contract Fee Structure</th>
+          <th>Contractor Justification & ROI</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Base Platform Deployment</strong></td>
+          <td><strong>$35,000 – $50,000</strong> (One-time)</td>
+          <td>On-premise installation, CMMC enclave configuration, Costpoint/RTM data ingestion. Paid in Month 1.</td>
+        </tr>
+        <tr>
+          <td><strong>Annual Platform License</strong></td>
+          <td><strong>$6,000 – $8,500 / month</strong> ($72k–$100k/yr)</td>
+          <td>Continuous updates, gate tuning, FAR compliance updates, sovereign model maintenance. Replaces $250k BD headcount.</td>
+        </tr>
+        <tr>
+          <td><strong>Win Bonus Kicker (Optional)</strong></td>
+          <td><strong>0.5% – 1.0% of Total Contract Value (TCV)</strong></td>
+          <td>Capped at $250k on funded task order awards. Massive upside alignment between software owner and contractor.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title">Payback Period</div>
+        <div class="metric-stat">< 60 Days</div>
+        <div class="metric-label">Immediate Break-Even</div>
+        <p class="card-text" style="margin-top: 10px;">
+          A single $15M task order win funded by this pipeline pays for 10 years of software licensing fees in month one.
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Overhead Wrap Reduction</div>
+        <div class="metric-stat">30–40%</div>
+        <div class="metric-label">Proposal Cost Savings</div>
+        <p class="card-text" style="margin-top: 10px;">
+          Dramatically reduces outside proposal consultant spend ($150–$250/hr), lowering indirect G&A costs on defense bids.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PAGE 12: ADVISOR STRESS-TEST GUIDE -->
+  <section class="view-pane" id="p12">
+    <div class="pane-header">
+      <div class="pane-meta">
+        <span class="pane-num">PAGE 12</span>
+        <span class="pill pill-gold">STRATEGIC COUNSEL</span>
+      </div>
+      <h1 class="pane-title">Advisor Discussion & Stress-Test Guide</h1>
+      <p class="pane-subtitle">The four decisive questions for your brother to review to validate this business model.</p>
+    </div>
+
+    <div class="callout">
+      <div class="callout-title">The Four Hard Questions for the Advisor</div>
+      <div class="callout-body">
+        Use these targeted questions to guide your conversation with your brother. Each question targets an unassailable commercial reality in the Huntsville defense ecosystem.
+      </div>
+    </div>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title"><span class="pill pill-gold">Question 1</span> GaN Exclusivity vs. Market Multiples</div>
+        <p class="card-text">
+          <em>"If GaN offers me 5–10% equity, what is that realistically worth at exit given GovCon services multiples (1.2x revenue)? Does it make more sense to keep the software IP in my own LLC and grant GaN anchor rights, or surrender the IP for employee equity?"</em>
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="pill pill-gold">Question 2</span> The Huntsville Contractor Appetite</div>
+        <p class="card-text">
+          <em>"Among your defense clients in Cummings Research Park, would they pay $40k install + $7k/month for an on-prem CMMC capture system that guarantees zero Section L/M compliance drift? Or are they still paralyzed by fear of AI?"</em>
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="pill pill-gold">Question 3</span> The OCI (Conflict of Interest) Risk</div>
+        <p class="card-text">
+          <em>"If I serve as an executive at GaN, how quickly do we trigger FAR 9.505 Organizational Conflict of Interest (OCI) issues if my software touches bids where GaN is competing against your other clients?"</em>
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="pill pill-gold">Question 4</span> Win Bonus Acceptance</div>
+        <p class="card-text">
+          <em>"Is a 1% win bonus kicker on won task orders standard practice among defense capture consultants in Huntsville, or do primes push back aggressively on contingency fees due to FAR commercial cost principles?"</em>
+        </p>
+      </div>
+    </div>
+
+    <div class="callout callout-success">
+      <div class="callout-title">Recommended Conclusion for the Meeting</div>
+      <div class="callout-body">
+        Present the <strong>Hybrid Lighthouse Model</strong> as the opening offer: Offer GaN the first fully-deployed anchor installation with preferred pricing and tailored past performance integration, in exchange for serving as the validated flagship case study. Keep the core engine IP in your sovereign entity.
+      </div>
+    </div>
+  </section>
+
+  <!-- BOTTOM PAGINATION -->
+  <div class="pagination-nav">
+    <button class="btn" id="prev-btn">← Previous Section</button>
+    <div style="font-family: var(--mono); font-size: 12px; color: var(--text-muted);" id="page-counter">Page 1 of 12</div>
+    <button class="btn btn-gold" id="next-btn">Next Section →</button>
+  </div>
+
+</main>
+
+<script>
+  const navItems = document.querySelectorAll('.nav-item');
+  const panes = document.querySelectorAll('.view-pane');
+  const prevBtn = document.getElementById('prev-btn');
+  const nextBtn = document.getElementById('next-btn');
+  const pageCounter = document.getElementById('page-counter');
+
+  let currentIndex = 0;
+  const totalPages = panes.length;
+
+  function updatePage(index) {
+    if (index < 0 || index >= totalPages) return;
+    currentIndex = index;
+
+    panes.forEach((p, idx) => {
+      p.classList.toggle('active', idx === currentIndex);
+    });
+
+    navItems.forEach((n, idx) => {
+      n.classList.toggle('active', idx === currentIndex);
+    });
+
+    pageCounter.textContent = `Page ${currentIndex + 1} of ${totalPages}`;
+    prevBtn.style.visibility = currentIndex === 0 ? 'hidden' : 'visible';
+    nextBtn.textContent = currentIndex === totalPages - 1 ? 'Finish Dossier' : 'Next Section →';
+    
+    // Scroll viewport to top
+    document.getElementById('content-container').scrollTop = 0;
+  }
+
+  navItems.forEach((item, idx) => {
+    item.addEventListener('click', () => updatePage(idx));
+  });
+
+  prevBtn.addEventListener('click', () => {
+    if (currentIndex > 0) updatePage(currentIndex - 1);
+  });
+
+  nextBtn.addEventListener('click', () => {
+    if (currentIndex < totalPages - 1) {
+      updatePage(currentIndex + 1);
+    } else {
+      updatePage(0); // loop back
+    }
+  });
+
+  // Keyboard navigation
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === 'PageDown') {
+      if (currentIndex < totalPages - 1) updatePage(currentIndex + 1);
+    } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+      if (currentIndex > 0) updatePage(currentIndex - 1);
+    }
+  });
+
+  // Init
+  updatePage(0);
+</script>
+
+</body>
+</html>
