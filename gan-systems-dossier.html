@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GaN Defense Systems Architecture — Unified Sovereign Stack</title>
+<style>
+  :root {
+    --bg-base: #06080a;
+    --bg-surface: #0c1015;
+    --bg-card: #121820;
+    --bg-card-hover: #18222d;
+    --border-subtle: #1c2633;
+    --border-accent: #2e3e52;
+    --text-primary: #e6edf3;
+    --text-secondary: #8b949e;
+    --text-muted: #586069;
+    --gold: #f0daa5;
+    --gold-dim: #9a8354;
+    --gold-glow: rgba(240, 218, 165, 0.12);
+    --emerald: #76d7a4;
+    --emerald-dim: #3a7a58;
+    --emerald-glow: rgba(118, 215, 164, 0.12);
+    --crimson: #ff7b72;
+    --crimson-dim: #8b2b2b;
+    --cyan: #79c0ff;
+    --purple: #d2a8ff;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --mono: "SF Mono", "Fira Code", Menlo, Monaco, Consolas, monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background-color: var(--bg-base);
+    color: var(--text-primary);
+    font-family: var(--sans);
+    line-height: 1.6;
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  aside {
+    width: 320px;
+    background-color: var(--bg-surface);
+    border-right: 1px solid var(--border-subtle);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+  }
+
+  .sidebar-header {
+    padding: 24px 20px;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .badge-tag {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 3px 8px;
+    border-radius: 4px;
+    background: var(--gold-glow);
+    color: var(--gold);
+    border: 1px solid var(--gold-dim);
+    margin-bottom: 8px;
+  }
+
+  .sidebar-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.01em;
+  }
+
+  .sidebar-sub {
+    font-size: 11px;
+    color: var(--text-secondary);
+    margin-top: 4px;
+    font-family: var(--mono);
+  }
+
+  nav {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px 10px;
+  }
+
+  .nav-group-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    padding: 12px 10px 6px 10px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 6px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    border: 1px solid transparent;
+  }
+
+  .nav-item:hover {
+    background-color: var(--bg-card);
+    color: var(--text-primary);
+  }
+
+  .nav-item.active {
+    background-color: var(--bg-card);
+    color: var(--gold);
+    border-color: var(--border-accent);
+    font-weight: 600;
+  }
+
+  .nav-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-muted);
+    width: 20px;
+    text-align: right;
+  }
+
+  .nav-item.active .nav-num {
+    color: var(--gold);
+  }
+
+  .sidebar-footer {
+    padding: 16px 20px;
+    border-top: 1px solid var(--border-subtle);
+    font-size: 11px;
+    font-family: var(--mono);
+    color: var(--text-muted);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  main {
+    flex: 1;
+    overflow-y: auto;
+    padding: 48px 64px;
+    position: relative;
+    background: radial-gradient(circle at top right, rgba(118, 215, 164, 0.03), transparent 40%),
+                radial-gradient(circle at bottom right, rgba(240, 218, 165, 0.03), transparent 40%);
+  }
+
+  .view-pane {
+    display: none;
+    max-width: 980px;
+    margin: 0 auto;
+    animation: fadeIn 0.2s ease-in-out;
+  }
+
+  .view-pane.active {
+    display: block;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .pane-header {
+    margin-bottom: 32px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .pane-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+
+  .pane-num {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--gold);
+    font-weight: 600;
+  }
+
+  .pane-title {
+    font-size: 32px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+  }
+
+  .pane-subtitle {
+    font-size: 15px;
+    color: var(--text-secondary);
+    margin-top: 6px;
+    line-height: 1.5;
+  }
+
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    margin: 24px 0;
+  }
+
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    padding: 22px;
+    transition: all 0.2s ease;
+  }
+
+  .card:hover {
+    border-color: var(--border-accent);
+    background: var(--bg-card-hover);
+  }
+
+  .card-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .card-text {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  .metric-stat {
+    font-family: var(--mono);
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--gold);
+    line-height: 1.2;
+    margin: 8px 0;
+  }
+
+  .metric-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+  }
+
+  .pill {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+  }
+
+  .pill-emerald { background: var(--emerald-glow); color: var(--emerald); border: 1px solid var(--emerald-dim); }
+  .pill-gold { background: var(--gold-glow); color: var(--gold); border: 1px solid var(--gold-dim); }
+  .pill-cyan { background: rgba(121, 192, 255, 0.1); color: var(--cyan); border: 1px solid #23456b; }
+  .pill-purple { background: rgba(210, 168, 255, 0.1); color: var(--purple); border: 1px solid #583b7e; }
+  .pill-crimson { background: rgba(255, 123, 114, 0.1); color: var(--crimson); border: 1px solid var(--crimson-dim); }
+
+  .spec-box {
+    background: #080b0f;
+    border: 1px solid var(--border-subtle);
+    border-radius: 6px;
+    padding: 16px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: #c9d1d9;
+    overflow-x: auto;
+    margin: 16px 0;
+  }
+
+  table.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 13px;
+  }
+
+  table.data-table th {
+    background: var(--bg-surface);
+    color: var(--text-secondary);
+    font-family: var(--mono);
+    font-weight: 600;
+    text-align: left;
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border-accent);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  table.data-table td {
+    padding: 14px;
+    border-bottom: 1px solid var(--border-subtle);
+    color: var(--text-primary);
+  }
+
+  table.data-table tr:hover td {
+    background: rgba(255,255,255,0.015);
+  }
+
+  .callout {
+    border-left: 3px solid var(--gold);
+    background: var(--gold-glow);
+    padding: 18px 20px;
+    border-radius: 0 6px 6px 0;
+    margin: 20px 0;
+  }
+
+  .callout-success {
+    border-left-color: var(--emerald);
+    background: var(--emerald-glow);
+  }
+
+  .callout-cyan {
+    border-left-color: var(--cyan);
+    background: rgba(121, 192, 255, 0.08);
+  }
+
+  .callout-title {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 6px;
+    color: var(--gold);
+    font-family: var(--mono);
+  }
+
+  .callout-success .callout-title { color: var(--emerald); }
+  .callout-cyan .callout-title { color: var(--cyan); }
+
+  .callout-body {
+    font-size: 13px;
+    color: var(--text-primary);
+    line-height: 1.5;
+  }
+
+  .diagram-container {
+    background: #080b0f;
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    padding: 24px;
+    margin: 24px 0;
+  }
+
+  .stack-tier {
+    background: var(--bg-card);
+    border: 1px solid var(--border-accent);
+    border-radius: 6px;
+    padding: 16px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .stack-tier-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .stack-tier-desc {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-top: 4px;
+  }
+
+  .stack-tools {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .pagination-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border-subtle);
+  }
+
+  .btn {
+    background: var(--bg-card);
+    border: 1px solid var(--border-accent);
+    color: var(--text-primary);
+    padding: 10px 18px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--sans);
+    transition: all 0.2s ease;
+  }
+
+  .btn:hover {
+    background: var(--bg-card-hover);
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+
+  .btn-gold {
+    background: var(--gold);
+    color: #06080a;
+    border-color: var(--gold);
+  }
+
+  .btn-gold:hover {
+    background: #e2c98e;
+    color: #06080a;
+  }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside>
+  <div class="sidebar-header">
+    <span class="badge-tag">GaN Enterprise Stack</span>
+    <div class="sidebar-title">Sovereign Ecosystem</div>
+    <div class="sidebar-sub">Complete Operational Architecture</div>
+  </div>
+
+  <nav id="sidebar-nav">
+    <div class="nav-group-label">System Topology</div>
+    <a class="nav-item active" data-target="s1"><span class="nav-num">01</span> Master Architecture</a>
+    <a class="nav-item" data-target="s2"><span class="nav-num">02</span> Sovereign MCP Bus</a>
+
+    <div class="nav-group-label">Core Subsystems</div>
+    <a class="nav-item" data-target="s3"><span class="nav-num">03</span> Dex: Institutional Memory</a>
+    <a class="nav-item" data-target="s4"><span class="nav-num">04</span> Triad + JEV: Disproof</a>
+    <a class="nav-item" data-target="s5"><span class="nav-num">05</span> Lie Detector & Sentinel</a>
+    <a class="nav-item" data-target="s6"><span class="nav-num">06</span> Dredge: Tangent Mining</a>
+    <a class="nav-item" data-target="s7"><span class="nav-num">07</span> Evolutionary Furnace</a>
+    <a class="nav-item" data-target="s8"><span class="nav-num">08</span> Treehouse: Safe Leases</a>
+    <a class="nav-item" data-target="s9"><span class="nav-num">09</span> GaN Vault: Deltek CMMC</a>
+
+    <div class="nav-group-label">Integration & Flywheel</div>
+    <a class="nav-item" data-target="s10"><span class="nav-num">10</span> End-to-End Orchestration</a>
+    <a class="nav-item" data-target="s11"><span class="nav-num">11</span> Enterprise Valuation</a>
+  </nav>
+
+  <div class="sidebar-footer">
+    <span>Stack: Go 1.24+ Bare Metal</span>
+    <span class="pill pill-emerald">0 Egress / CMMC L2</span>
+  </div>
+</aside>
+
+<!-- MAIN CONTENT -->
+<main id="content-container">
+
+  <!-- PAGE 1: MASTER ARCHITECTURE -->
+  <section class="view-pane active" id="s1">
+    <div class="pane-header">
+      <div class="pane-meta">
+        <span class="pane-num">TIER 01</span>
+        <span class="pill pill-gold">EXECUTIVE OVERVIEW</span>
+      </div>
+      <h1 class="pane-title">The Complete GaN Sovereign Ecosystem</h1>
+      <p class="pane-subtitle">A unified, military-grade AI infrastructure built in pure Go that replaces fragmented SaaS tools with an air-gapped operating system.</p>
+    </div>
+
+    <div class="callout callout-cyan">
+      <div class="callout-title">Architecture Philosophy: The Sovereign Kernel</div>
+      <div class="callout-body">
+        Unlike commercial enterprise AI that relies on external SaaS endpoints (OpenAI, Anthropic, cloud vector databases), every component in this ecosystem was engineered as a <strong>standalone, compiled Go binary</strong> running locally on bare-metal hardware. All components communicate over a standardized <strong>Model Context Protocol (MCP) bus</strong> with cryptographic sandboxing, zero cloud egress, and sub-millisecond execution.
+      </div>
+    </div>
+
+    <div class="diagram-container">
+      <div class="stack-tier">
+        <div>
+          <div class="stack-tier-title"><span class="pill pill-gold">Layer 4</span> Command Cockpit & Fleet Supervision</div>
+          <div class="stack-tier-desc">Multi-seat harness orchestrating Build, Review, and Operator seats under zero disk-write rules.</div>
+        </div>
+        <div class="stack-tools">
+          <span class="pill pill-gold">fm-land</span>
+          <span class="pill pill-gold">cockpit</span>
+          <span class="pill pill-gold">Treehouse</span>
+        </div>
+      </div>
+
+      <div class="stack-tier">
+        <div>
+          <div class="stack-tier-title"><span class="pill pill-emerald">Layer 3</span> Adversarial Verification & Governance</div>
+          <div class="stack-tier-desc">Mathematical truth-enforcement: Triad disproof, JEV probability, anti-hallucination sentinel.</div>
+        </div>
+        <div class="stack-tools">
+          <span class="pill pill-emerald">fm-triad-jev</span>
+          <span class="pill pill-emerald">fm-lie-detector</span>
+          <span class="pill pill-emerald">fm-furnace</span>
+        </div>
+      </div>
+
+      <div class="stack-tier">
+        <div>
+          <div class="stack-tier-title"><span class="pill pill-cyan">Layer 2</span> Institutional Memory & Ingestion Bus</div>
+          <div class="stack-tier-desc">Sub-millisecond FTS5 SQLite index, automated tangent dredge, and Deltek Costpoint air-gap vault.</div>
+        </div>
+        <div class="stack-tools">
+          <span class="pill pill-cyan">dex</span>
+          <span class="pill pill-cyan">fm-dredge</span>
+          <span class="pill pill-cyan">gan-vault</span>
+        </div>
+      </div>
+
+      <div class="stack-tier">
+        <div>
+          <div class="stack-tier-title"><span class="pill pill-purple">Layer 1</span> Sovereign MCP Bus & Hardware Enclave</div>
+          <div class="stack-tier-desc">Native Go JSON-RPC server multiplexing tools to Claude, Cursor, Codex, and local LLMs.</div>
+        </div>
+        <div class="stack-tools">
+          <span class="pill pill-purple">mcp-go</span>
+          <span class="pill pill-purple">Dell/AMD CMMC L2</span>
+        </div>
+      </div>
+    </div>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Subsystem</th>
+          <th>Physical Binary / Repo</th>
+          <th>Core Purpose & Mission</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Dex Memory</strong></td>
+          <td><code>~/bin/dex</code> (Go/SQLite)</td>
+          <td>Sub-millisecond institutional knowledge retrieval with OKF v0.2 trust certification.</td>
+        </tr>
+        <tr>
+          <td><strong>Triad + JEV</strong></td>
+          <td><code>~/bin/fm-triad-jev</code></td>
+          <td>Headless multi-model adversarial disproof (Codex + Grok + JEV) with >90% survival gating.</td>
+        </tr>
+        <tr>
+          <td><strong>Lie Detector</strong></td>
+          <td><code>~/bin/fm-lie-detector</code></td>
+          <td>AST-based verification proving agent claims against real git commits and file diffs.</td>
+        </tr>
+        <tr>
+          <td><strong>Harbor Dredge</strong></td>
+          <td><code>~/bin/fm-dredge</code></td>
+          <td>Background cognitive miner harvesting uncommitted brainstorm jewels from chat transcripts.</td>
+        </tr>
+        <tr>
+          <td><strong>Furnace</strong></td>
+          <td><code>bin/fm-furnace</code></td>
+          <td>Bounded Karpathy recursive self-improvement engine running 2–5 generation evolutionary loops.</td>
+        </tr>
+        <tr>
+          <td><strong>Treehouse</strong></td>
+          <td><code>~/bin/treehouse</code></td>
+          <td>Ephemeral, cryptographically isolated git worktree leasing for zero-leak build execution.</td>
+        </tr>
+        <tr>
+          <td><strong>GaN Vault</strong></td>
+          <td><code>projects/gan-vault</code></td>
+          <td>CMMC Level 2 compliant enclave for Deltek Costpoint rates, resumes, and past performance.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- PAGE 2: SOVEREIGN MCP BUS -->
+  <section class="view-pane" id="s2">
+    <div class="pane-header">
+      <div class="pane-meta">
+        <span class="pane-num">SUBSYSTEM 02</span>
+        <span class="pill pill-purple">INTEGRATION BUS</span>
+      </div>
+      <h1 class="pane-title">Sovereign MCP Bus: Single Engine, Any Harness</h1>
+      <p class="pane-subtitle">How compiled bare-metal tools plug into Claude Desktop, Cursor, Codex, and local CLI models without custom API glue.</p>
+    </div>
+
+    <div class="callout callout-cyan">
+      <div class="callout-title">The Harness Agnosticism Breakthrough</div>
+      <div class="callout-body">
+        Instead of rewriting prompts or building custom plugins for every new AI interface, our pure Go Model Context Protocol (MCP) server (<code>~/bin/mcp</code>) exposes all corporate tools via standard JSON-RPC 2.0. Whether GaN engineers open Claude Desktop, Cursor IDE, or a terminal, they share the identical memory, gating, and search infrastructure.
+      </div>
+    </div>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title"><span class="pill pill-purple">Tool 01</span> <code>dex_search</code></div>
+        <div class="card-text">
+          Searches GaN's entire classified/unclassified proposal history, CMMC policies, and corporate memory in under 2ms using local SQLite FTS5.
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="pill pill-purple">Tool 02</span> <code>fm_triad_jev</code></div>
+        <div class="card-text">
+          Executes multi-model stress-testing on any proposed architecture or capture strategy before human presentation.
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="pill pill-purple">Tool 03</span> <code>fm_lie_detector</code></div>
+        <div class="card-text">
+          Enforces empirical ground-truth verification on all coding claims and technical reports.
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="pill pill-purple">Tool 04</span> <code>fm_dredge</code></div>
+        <div class="card-text">
+          Harvests high-yield cognitive ideas dropped during executive brainstorms into structured knowledge cards.
+        </div>
+      </div>
+    </div>
+
+    <div class="spec-box">
+<span class="comment">// Example MCP Client Configuration (~/.cursor/mcp.json or Claude Desktop)</span>
+{
+  <span class="keyword">"mcpServers"</span>: {
+    <span class="keyword">"sovereign-kernel"</span>: {
+      <span class="keyword">"command"</span>: <span class="literal">"/Users/davidjeffery/bin/mcp"</span>,
+      <span class="keyword">"args"</span>: [<span class="literal">"serve"</span>],
+      <span class="keyword">"env"</span>: {
+        <span class="keyword">"SOVEREIGN_HOME"</span>: <span class="literal">"/Users/davidjeffery/my-dex"</span>,
+        <span class="keyword">"SECURITY_LEVEL"</span>: <span class="literal">"CMMC_LEVEL_2"</span>
+      }
+    }
+  }
+}
+    </div>
+  </section>
+
+  <!-- PAGE 3: DEX INSTITUTIONAL MEMORY -->
+  <section class="view-pane" id="s3">
+    <div class="pane-header">
+      <div class="pane-meta">
+        <span class="pane-num">SUBSYSTEM 03</span>
+        <span class="pill pill-cyan">KNOWLEDGE ENGINE</span>
+      </div>
+      <h1 class="pane-title">Dex: Sub-Millisecond Institutional Memory</h1>
+      <p class="pane-subtitle">Air-gapped full-text knowledge retrieval governed by the Open Knowledge Format (OKF v0.2).</p>
+    </div>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title">Pure SQLite FTS5 Engine</div>
+        <div class="metric-stat">< 2ms</div>
+        <div class="metric-label">Query Latency Across 100k Chunks</div>
+        <p class="card-text" style="margin-top: 10px;">
+          Compiled in Go (<code>~/bin/dex</code>). Zero vector database overhead, zero Python dependencies, and zero external cloud embedding API bills.
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">OKF v0.2 Governance</div>
+        <div class="metric-stat">3-Tier</div>
+        <div class="metric-label">Cryptographic Trust Model</div>
+        <p class="card-text" style="margin-top: 10px;">
+          Enforces <code>provenance</code>, <code>confidence</code>, and <code>stale_after</code> lifecycles on all knowledge cards. Stale cards are automatically flagged before quoting.
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Continuous Git Synchronization</div>
+        <div class="metric-stat">100%</div>
+        <div class="metric-label">Auditability & Version History</div>
+        <p class="card-text" style="margin-top: 10px;">
+          Every knowledge mutation creates an immutable signed Git commit. Full traceability of who edited past performance and when.
+        </p>
+      </div>
+    </div>
+
+    <div class="callout callout-cyan">
+      <div class="callout-title">The Problem Dex Solves for GaN</div>
+      <div class="callout-body">
+        GovCon firms suffer from corporate amnesia: when a senior capture manager leaves, their winning proposal strategies, pricing nuances, and past performance narratives leave with them. Dex transforms GaN's proposal history into a permanently indexed, instant-retrieval corporate brain that any authorized engineer or capture lead can query in milliseconds.
+      </div>
+    </div>
+  </section>
+
+  <!-- PAGE 4: TRIAD + JEV -->
+  <section class="view-pane" id="s4">
+    <div class="pane-header">
+      <div class="pane-meta">
+        <span class="pane-num">SUBSYSTEM 04</span>
+        <span class="pill pill-emerald">ADVERSARIAL REASONING</span>
+      </div>
+      <h1 class="pane-title">Triad + JEV: Multi-Model Disproof</h1>
+      <p class="pane-subtitle">Replacing LLM 'vibes' and echo chambers with orthogonal multi-agent stress-testing.</p>
+    </div>
+
+    <div class="callout callout-success">
+      <div class="callout-title">The Anti-Circle-Jerk Architecture</div>
+      <div class="callout-body">
+        Single LLMs hallucinate consensus and flatter users. Our Triad coordinates three distinct cognitive entities: <strong>Codex</strong> (pragmatic systems engineering), <strong>Grok</strong> (skeptical capture strategy and contrarian failure analysis), and <strong>JEV</strong> (strict Bayesian probability disproof engine). No technical proposal or architecture can be executed without documented >90% empirical survival.
+      </div>
+    </div>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title"><span class="pill pill-emerald">Seat 1</span> Codex Exec</div>
+        <div class="card-text">
+          Focuses purely on mechanical feasibility: memory budgets, AST syntax, OpenXML schema validity, and binary execution performance.
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="pill pill-emerald">Seat 2</span> Grok Contrarian</div>
+        <div class="card-text">
+          Tears proposals apart from a hostile competitor's perspective: identifies regulatory loopholes, OCI landmines, and capture fatigue points.
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="pill pill-emerald">Seat 3</span> JEV Probability Engine</div>
+        <div class="card-text">
+          Evaluates multi-scenario candidate slates and calculates objective statistical survival thresholds (<code>P(SURVIVES) >= 0.90</code>).
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PAGE 5: LIE DETECTOR & SENTINEL -->
+  <section class="view-pane" id="s5">
+    <div class="pane-header">
+      <div class="pane-meta">
+        <span class="pane-num">SUBSYSTEM 05</span>
+        <span class="pill pill-gold">INTEGRITY ENFORCEMENT</span>
+      </div>
+      <h1 class="pane-title">Lie Detector & Anti-Cheating Sentinel</h1>
+      <p class="pane-subtitle">Eliminating AI fabrication by verifying code claims against real disk changes and Git diffs.</p>
+    </div>
+
+    <div class="callout">
+      <div class="callout-title">The Fundamental LLM Hazard</div>
+      <div class="callout-body">
+        When asked if tests passed or if an RFP requirement was fulfilled, AI agents routinely hallucinate: <em>"All 45 tests passed clean."</em> In reality, the agent never ran the tests or quietly skipped broken assertions. The <strong>Lie Detector</strong> (<code>~/bin/fm-lie-detector</code>) eliminates this failure mode forever.
+      </div>
+    </div>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title">Git Tree vs Chat Diff Audit</div>
+        <div class="card-text">
+          Inspects the exact commit SHA under test. If an agent claims to have refactored a module but the Git index shows zero file mutations, the operation is blocked and flagged as a fabrication breach.
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Sentinel Gated Landing (<code>fm-land</code>)</div>
+        <div class="card-text">
+          No code or proposal section can merge into <code>main</code> without a cryptographic pass token recorded in <code>data/sentinel/pass.log</code> signed by the independent Review seat.
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Zero Disk-Write Orchestrator</div>
+        <div class="card-text">
+          The supervisory Orchestrator has zero mutation authority on disk. All edits are quarantined to Build workers inside ephemeral Treehouse leases.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PAGE 6: HARBOR DREDGE -->
+  <section class="view-pane" id="s6">
+    <div class="pane-header">
+      <div class="pane-meta">
+        <span class="pane-num">SUBSYSTEM 06</span>
+        <span class="pill pill-cyan">COGNITIVE LEVERAGE</span>
+      </div>
+      <h1 class="pane-title">Harbor Dredge: Background Tangent Mining</h1>
+      <p class="pane-subtitle">Harvesting high-value executive ideas dropped during flow state without interrupting velocity.</p>
+    </div>
+
+    <div class="callout callout-cyan">
+      <div class="callout-title">The Dual-Highway Architecture</div>
+      <div class="callout-body">
+        Executives think in rapid tangents and creative detours. Traditional capture tools force human operators to stop writing and manually organize notes. The Harbor Dredge runs silently on <strong>Highway 2</strong>: it reads session transcripts in read-only mode, identifies dropped strategic insights, scores them via JEV, and serves up the top 3 jewels when the operator pauses to rest.
+      </div>
+    </div>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title">Zero Real-Time Interruptions</div>
+        <div class="card-text">
+          Never nags the user during active drafting. Operates purely in the background on completed transcript JSONL files.
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Autonomous OKF Card Generation</div>
+        <div class="card-text">
+          Converts validated ideas directly into standardized markdown cards in <code>~/my-dex/06-Resources/Ideation/</code> with full attribution.
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Flywheel into Backlog</div>
+        <div class="card-text">
+          High-scoring technical insights are converted directly into actionable capture tasks without manual copy-pasting.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PAGE 7: EVOLUTIONARY FURNACE -->
+  <section class="view-pane" id="s7">
+    <div class="pane-header">
+      <div class="pane-meta">
+        <span class="pane-num">SUBSYSTEM 07</span>
+        <span class="pill pill-gold">RECURSIVE REFINEMENT</span>
+      </div>
+      <h1 class="pane-title">The Furnace: Karpathy Recursive Self-Improvement</h1>
+      <p class="pane-subtitle">Bounded 2-to-5 generation evolutionary optimization of proposal narratives and technical solutions.</p>
+    </div>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title"><span class="pill pill-gold">Mode 1</span> Physical Optimization</div>
+        <p class="card-text">
+          Mutates code and templates against tamper-aware unit tests and benchmark runtimes. Acceptance strictly requires: <code>score &gt; current_best_score</code> + an adversarial <code>SURVIVES</code> determination.
+        </p>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="pill pill-gold">Mode 2</span> Combinatorial Strategy</div>
+        <p class="card-text">
+          Searches strategy configurations anchored to immutable reference text. Emits combinations across 2 to 5 generations, requiring <code>P(SURVIVES) &gt;= 0.90</code> for final acceptance.
+        </p>
+      </div>
+    </div>
+
+    <div class="callout callout-success">
+      <div class="callout-title">The Commercial Impact on Win Rate</div>
+      <div class="callout-body">
+        Human proposal teams do not have time to rewrite executive summaries 5 times to find the optimal framing. The Furnace runs overnight, stress-testing competing win themes, labor mixes, and technical approaches until it finds the mathematically dominant narrative.
+      </div>
+    </div>
+  </section>
+
+  <!-- PAGE 8: TREEHOUSE LEASING -->
+  <section class="view-pane" id="s8">
+    <div class="pane-header">
+      <div class="pane-meta">
+        <span class="pane-num">SUBSYSTEM 08</span>
+        <span class="pill pill-purple">SANDBOX ISOLATION</span>
+      </div>
+      <h1 class="pane-title">Treehouse: Ephemeral Worktree Sandboxes</h1>
+      <p class="pane-subtitle">Cryptographic branch isolation guaranteeing zero contamination of production repositories.</p>
+    </div>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title">Instant Ephemeral Worktrees</div>
+        <div class="card-text">
+          Compiled in Go (<code>~/bin/treehouse</code>). Leases clean, isolated Git worktrees for each build task in under 15 milliseconds.
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Zero Cross-Pollution</div>
+        <div class="card-text">
+          Workers cannot modify dirty files in the user's primary working directory. Every task executes in its own sandboxed filesystem.
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Atomic Land & Teardown</div>
+        <div class="card-text">
+          When a task completes and passes Review verification, <code>fm-land</code> merges the commit into <code>main</code> and destroys the ephemeral lease cleanly.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PAGE 9: GAN VAULT -->
+  <section class="view-pane" id="s9">
+    <div class="pane-header">
+      <div class="pane-meta">
+        <span class="pane-num">SUBSYSTEM 09</span>
+        <span class="pill pill-emerald">DATA SECURITY</span>
+      </div>
+      <h1 class="pane-title">GaN Vault: Deltek Costpoint & CMMC Enclave</h1>
+      <p class="pane-subtitle">Air-gapped ingestion of sensitive corporate rate cards, employee clearances, and past performance.</p>
+    </div>
+
+    <div class="callout callout-success">
+      <div class="callout-title">CMMC Level 2 & NIST SP 800-171 Compliance</div>
+      <div class="callout-body">
+        Defense contractors cannot place indirect rates, wrap rates, or employee security clearances into cloud systems. The <strong>GaN Vault</strong> (<code>projects/gan-vault</code>) is an encrypted local repository configured specifically to hold Deltek Costpoint labor data, past performance citations, and executive resumes behind zero-egress firewalls.
+      </div>
+    </div>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title">Deltek Labor Sync</div>
+        <div class="card-text">
+          Maps GaN's specific labor categories (LCATs) and direct billing rates directly into proposal cost models without manual transcription.
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">CUI Redaction Filter</div>
+        <div class="card-text">
+          Automatically strips Controlled Unclassified Information (CUI) and PII before non-cleared internal models process narrative structures.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PAGE 10: END-TO-END ORCHESTRATION -->
+  <section class="view-pane" id="s10">
+    <div class="pane-header">
+      <div class="pane-meta">
+        <span class="pane-num">INTEGRATION 10</span>
+        <span class="pill pill-gold">THE COMPLETE WORKFLOW</span>
+      </div>
+      <h1 class="pane-title">How the Entire Machine Works Together</h1>
+      <p class="pane-subtitle">From raw RFP release on SAM.gov to signed proposal delivery in a single closed loop.</p>
+    </div>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Phase</th>
+          <th>Participating Systems</th>
+          <th>Automated Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>1. Ingestion</strong></td>
+          <td><code>proposal-pipe</code> + <code>pkg/intake</code></td>
+          <td>Pulls RFP from SAM.gov, shreds Section C/L/M into structured JSON RTM.</td>
+        </tr>
+        <tr>
+          <td><strong>2. Memory Injection</strong></td>
+          <td><code>dex</code> + <code>gan-vault</code></td>
+          <td>Queries 100k chunks of GaN past performance and Costpoint labor rates via MCP.</td>
+        </tr>
+        <tr>
+          <td><strong>3. Strategy Disproof</strong></td>
+          <td><code>fm-triad-jev</code></td>
+          <td>Codex + Grok + JEV evaluate win themes and calculate statistical survival (>90%).</td>
+        </tr>
+        <tr>
+          <td><strong>4. Sandboxed Drafting</strong></td>
+          <td><code>treehouse</code> + <code>StreamGuard</code></td>
+          <td>Build worker drafts in leased worktree with sub-50ms token hallucination protection.</td>
+        </tr>
+        <tr>
+          <td><strong>5. DCAA & FAR Audit</strong></td>
+          <td>Gate 1, Gate 2, Gate 3</td>
+          <td>Deterministic verification: $0.00 penny drift and zero unmapped RFP requirements.</td>
+        </tr>
+        <tr>
+          <td><strong>6. Integrity Audit</strong></td>
+          <td><code>fm-lie-detector</code> + <code>fm-land</code></td>
+          <td>Verifies real Git diff against claims, generates pass token, and merges into main.</td>
+        </tr>
+        <tr>
+          <td><strong>7. OpenXML Compilation</strong></td>
+          <td><code>pkg/docir</code></td>
+          <td>Compiles directly to native Word .docx with DoD CUI headers and pixel-perfect tables.</td>
+        </tr>
+        <tr>
+          <td><strong>8. Tangent Mining</strong></td>
+          <td><code>fm-dredge</code></td>
+          <td>Mines breakthrough capture ideas from chat history and commits new cards to Dex.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- PAGE 11: ENTERPRISE VALUATION -->
+  <section class="view-pane" id="s11">
+    <div class="pane-header">
+      <div class="pane-meta">
+        <span class="pane-num">STRATEGY 11</span>
+        <span class="pill pill-emerald">STRATEGIC VALUE</span>
+      </div>
+      <h1 class="pane-title">Enterprise Valuation & Strategic Leverage</h1>
+      <p class="pane-subtitle">Why this sovereign asset belongs in a dedicated software holding entity.</p>
+    </div>
+
+    <div class="callout callout-success">
+      <div class="callout-title">The Multi-Million Dollar Capital Structure</div>
+      <div class="callout-body">
+        This is not a collection of scripts. It is a <strong>complete, air-gapped sovereign capture operating system</strong>. Handing this IP over to an individual GovCon services contractor locks its valuation at a 1.2x services revenue multiple. Holding the IP in your sovereign entity and licensing it to GaN (and other non-competing primes) unlocks enterprise software multiples (8x to 15x).
+      </div>
+    </div>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title">Commercial Software Valuation</div>
+        <div class="metric-stat">$3M – $5M</div>
+        <div class="metric-label">Current Standalone IP Replacement Cost</div>
+        <p class="card-text" style="margin-top: 10px;">
+          Building an air-gapped Go capture engine, OpenXML compiler, sub-50ms micro-discriminator, and DCAA audit gates requires 18–24 months of specialized senior systems engineering.
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">GaN Win-Rate Acceleration</div>
+        <div class="metric-stat">+300%</div>
+        <div class="metric-label">Bid Capacity Scaling</div>
+        <p class="card-text" style="margin-top: 10px;">
+          Allows GaN to bid on 60–80 task orders per year with the same capture headcount, dramatically increasing top-line awards.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- BOTTOM PAGINATION -->
+  <div class="pagination-nav">
+    <button class="btn" id="prev-btn">← Previous Section</button>
+    <div style="font-family: var(--mono); font-size: 12px; color: var(--text-muted);" id="page-counter">Page 1 of 11</div>
+    <button class="btn btn-gold" id="next-btn">Next Section →</button>
+  </div>
+
+</main>
+
+<script>
+  const navItems = document.querySelectorAll('.nav-item');
+  const panes = document.querySelectorAll('.view-pane');
+  const prevBtn = document.getElementById('prev-btn');
+  const nextBtn = document.getElementById('next-btn');
+  const pageCounter = document.getElementById('page-counter');
+
+  let currentIndex = 0;
+  const totalPages = panes.length;
+
+  function updatePage(index) {
+    if (index < 0 || index >= totalPages) return;
+    currentIndex = index;
+
+    panes.forEach((p, idx) => {
+      p.classList.toggle('active', idx === currentIndex);
+    });
+
+    navItems.forEach((n, idx) => {
+      n.classList.toggle('active', idx === currentIndex);
+    });
+
+    pageCounter.textContent = `Page ${currentIndex + 1} of ${totalPages}`;
+    prevBtn.style.visibility = currentIndex === 0 ? 'hidden' : 'visible';
+    nextBtn.textContent = currentIndex === totalPages - 1 ? 'Finish Dossier' : 'Next Section →';
+    
+    document.getElementById('content-container').scrollTop = 0;
+  }
+
+  navItems.forEach((item, idx) => {
+    item.addEventListener('click', () => updatePage(idx));
+  });
+
+  prevBtn.addEventListener('click', () => {
+    if (currentIndex > 0) updatePage(currentIndex - 1);
+  });
+
+  nextBtn.addEventListener('click', () => {
+    if (currentIndex < totalPages - 1) {
+      updatePage(currentIndex + 1);
+    } else {
+      updatePage(0);
+    }
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === 'PageDown') {
+      if (currentIndex < totalPages - 1) updatePage(currentIndex + 1);
+    } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+      if (currentIndex > 0) updatePage(currentIndex - 1);
+    }
+  });
+
+  updatePage(0);
+</script>
+
+</body>
+</html>
