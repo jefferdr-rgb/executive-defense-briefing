@@ -1,0 +1,1354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Complete Executive Defense Briefing — Full Dossier</title>
+<style>
+  :root {
+    --bg: #0b0f14;
+    --card: #141b22;
+    --card-border: #24303e;
+    --text: #f0f6fc;
+    --text-muted: #8b949e;
+    --gold: #f0daa5;
+    --emerald: #76d7a4;
+    --crimson: #ff7b72;
+    --cyan: #79c0ff;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --mono: "SF Mono", Menlo, Consolas, monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    line-height: 1.5;
+    padding: 0;
+    margin: 0;
+  }
+
+  /* STICKY HEADER & NAV BAR */
+  .sticky-nav {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: rgba(11, 15, 20, 0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--card-border);
+    padding: 12px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .nav-brand {
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .nav-links a {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-decoration: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1px solid transparent;
+    transition: all 0.15s ease;
+  }
+
+  .nav-links a:hover {
+    color: var(--text);
+    border-color: var(--card-border);
+    background: var(--card);
+  }
+
+  .nav-links a.active {
+    color: var(--gold);
+    border-color: rgba(240, 218, 165, 0.3);
+    background: rgba(240, 218, 165, 0.08);
+  }
+
+  /* MAIN CONTAINER */
+  .main-wrapper {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 32px 20px 80px 20px;
+  }
+
+  .briefing-section {
+    margin-bottom: 64px;
+    padding-top: 20px;
+  }
+
+  .section-divider {
+    display: flex;
+    align-items: center;
+    margin-bottom: 32px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--card-border);
+  }
+
+  .section-step-badge {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    background: rgba(240, 218, 165, 0.12);
+    color: var(--gold);
+    border: 1px solid rgba(240, 218, 165, 0.35);
+    padding: 4px 12px;
+    border-radius: 4px;
+  }
+
+  /* REUSABLE STYLES FROM PAGES */
+  header {
+    border-bottom: 1px solid var(--card-border);
+    padding-bottom: 20px;
+    margin-bottom: 28px;
+  }
+
+  .badge {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: rgba(240, 218, 165, 0.1);
+    color: var(--gold);
+    border: 1px solid rgba(240, 218, 165, 0.3);
+    padding: 3px 8px;
+    border-radius: 4px;
+    margin-bottom: 12px;
+  }
+
+  h1 {
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+  }
+
+  .subtitle {
+    font-size: 14px;
+    color: var(--text-muted);
+  }
+
+  .section-title {
+    font-size: 17px;
+    font-weight: 700;
+    margin: 32px 0 16px 0;
+    color: var(--gold);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  .grid-3 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    padding: 20px;
+  }
+
+  .card h3 {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--text);
+  }
+
+  .card p {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  .stat {
+    font-family: var(--mono);
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--gold);
+    margin: 4px 0 8px 0;
+  }
+
+  .flow-step {
+    display: flex;
+    gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--card-border);
+  }
+
+  .flow-step:last-child { border-bottom: none; }
+
+  .step-num {
+    font-family: var(--mono);
+    font-weight: 800;
+    color: var(--gold);
+    font-size: 14px;
+    width: 24px;
+    flex-shrink: 0;
+  }
+
+  .step-content h4 {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 3px;
+  }
+
+  .step-content p {
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  .highlight-box {
+    background: rgba(118, 215, 164, 0.08);
+    border-left: 3px solid var(--emerald);
+    padding: 16px 18px;
+    border-radius: 0 6px 6px 0;
+    margin: 24px 0;
+  }
+
+  .highlight-box h3, .highlight-box h4 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--emerald);
+    margin-bottom: 4px;
+  }
+
+  .highlight-box p {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.5;
+  }
+
+  .box-alert {
+    background: rgba(255, 123, 114, 0.08);
+    border-left: 3px solid var(--crimson);
+    padding: 18px 20px;
+    border-radius: 0 8px 8px 0;
+    margin-bottom: 24px;
+  }
+
+  .box-alert h4 {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--crimson);
+    margin-bottom: 6px;
+  }
+
+  .box-alert p {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  .box-info {
+    background: rgba(121, 192, 255, 0.08);
+    border-left: 3px solid var(--cyan);
+    padding: 18px 20px;
+    border-radius: 0 8px 8px 0;
+    margin-bottom: 24px;
+  }
+
+  .box-info h4 {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--cyan);
+    margin-bottom: 6px;
+  }
+
+  .box-info p {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  .box-quote {
+    background: rgba(240, 218, 165, 0.08);
+    border-left: 3px solid var(--gold);
+    padding: 18px 20px;
+    border-radius: 0 8px 8px 0;
+    margin-bottom: 24px;
+  }
+
+  .box-quote h4 {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--gold);
+    margin-bottom: 6px;
+  }
+
+  .box-quote p {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  .question-card {
+    background: var(--card);
+    border-left: 3px solid var(--gold);
+    padding: 16px 20px;
+    border-radius: 0 8px 8px 0;
+    margin-bottom: 12px;
+  }
+
+  .question-card h4 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--gold);
+    margin-bottom: 4px;
+  }
+
+  .question-card p {
+    font-size: 13px;
+    color: var(--text);
+    font-style: italic;
+  }
+
+  .intro-box {
+    background: rgba(121, 192, 255, 0.08);
+    border-left: 3px solid var(--cyan);
+    padding: 16px 18px;
+    border-radius: 0 6px 6px 0;
+    margin-bottom: 24px;
+  }
+
+  .intro-box h4 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--cyan);
+    margin-bottom: 4px;
+  }
+
+  .intro-box p {
+    font-size: 13px;
+    color: var(--text);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 13px;
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  th {
+    text-align: left;
+    padding: 11px 14px;
+    border-bottom: 1px solid var(--card-border);
+    color: var(--gold);
+    background: #18222d;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  td {
+    padding: 12px 14px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+
+  td strong { color: var(--text); }
+
+  .status-tag {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+
+  .tag-no { background: rgba(255, 123, 114, 0.15); color: var(--crimson); border: 1px solid #6e2723; }
+  .tag-yes { background: rgba(118, 215, 164, 0.15); color: var(--emerald); border: 1px solid #2e5942; }
+  .tag-public { background: rgba(121, 192, 255, 0.1); color: var(--cyan); border: 1px solid #23456b; }
+  .tag-private { background: rgba(118, 215, 164, 0.1); color: var(--emerald); border: 1px solid #2e5942; }
+  .tag-compute { background: rgba(240, 218, 165, 0.1); color: var(--gold); border: 1px solid #5a4b2c; }
+
+  .node-card {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+
+  .node-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .node-tag {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 4px;
+  }
+
+  .node-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .grid-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .col-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-family: var(--mono);
+    margin-bottom: 4px;
+  }
+
+  .col-what .col-label { color: var(--cyan); }
+  .col-why .col-label { color: var(--emerald); }
+
+  .col-desc {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  .specimen-code {
+    font-family: var(--mono);
+    font-size: 11px;
+    background: rgba(0,0,0,0.3);
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid rgba(255,255,255,0.06);
+    color: var(--cyan);
+    margin-top: 6px;
+    display: block;
+    line-height: 1.4;
+  }
+
+  @media (max-width: 720px) {
+    .grid-2, .grid-details { grid-template-columns: 1fr; }
+    .sticky-nav { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- STICKY TOP CONTROLS -->
+  <nav class="sticky-nav">
+    <div class="nav-brand">Executive Defense Briefing</div>
+    <div class="nav-links">
+      <a href="#sec-summary">1. Summary</a>
+      <a href="#sec-arch">2. Architecture</a>
+      <a href="#sec-nodes">3. Nodes</a>
+      <a href="#sec-guardrails">4. Guardrails</a>
+      <a href="#sec-foundation">5. Foundation</a>
+    </div>
+  </nav>
+
+  <div class="main-wrapper">
+    
+        <section id="sec-summary" class="briefing-section">
+            <div class="section-divider">
+                <span class="section-step-badge">1. Executive Summary</span>
+            </div>
+            
+
+    
+
+
+  <header>
+    <div class="badge">Executive Advisor Briefing</div>
+    <h1>Defense Proposal Software</h1>
+    <div class="subtitle">A simple overview of what was built, how it works, and the core business decision.</div>
+  </header>
+
+  <!-- THE BIG PICTURE -->
+  <div class="highlight-box">
+    <h4>What This Is In One Sentence</h4>
+    <p>We built software that runs on an office server to automatically read government solicitations, check every requirement, pull company past performance, and write audit-ready defense proposals in Microsoft Word in 4 hours instead of 3 weeks.</p>
+  </div>
+
+  <!-- THE 3 PAIN POINTS -->
+  <div class="section-title">1. Why Defense Contractors Need This</div>
+  <div class="grid-3">
+    <div class="card">
+      <div class="stat">6–8 Bids</div>
+      <h3>The Human Limit</h3>
+      <p>A good proposal manager caps out at 6 to 8 bids a year. Hiring more senior capture people is slow, expensive ($250k+ each), and eats profit margins.</p>
+    </div>
+    <div class="card">
+      <div class="stat">0 Errors</div>
+      <h3>Disqualification Trap</h3>
+      <p>The government throws out proposals for minor errors—like missing one small requirement or having numbers in the pricing sheet that don't match the written proposal.</p>
+    </div>
+    <div class="card">
+      <div class="stat">100% Local</div>
+      <h3>Can't Use Cloud AI</h3>
+      <p>Defense contractors cannot paste sensitive rates, resumes, or contract data into ChatGPT or cloud tools without violating federal cybersecurity rules.</p>
+    </div>
+  </div>
+
+  <!-- WHAT WE BUILT (5 SIMPLE STEPS) -->
+  <div class="section-title">2. How The Software Works</div>
+  <div class="card" style="padding: 10px 20px;">
+    <div class="flow-step">
+      <div class="step-num">01</div>
+      <div class="step-content">
+        <h4>Reads the Solicitation</h4>
+        <p>Scans government RFP documents (Sections C, L, and M) and extracts every single mandatory requirement in 60 seconds.</p>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="step-num">02</div>
+      <div class="step-content">
+        <h4>Locks the Checklist</h4>
+        <p>Builds a 100% complete compliance matrix. Writing cannot start until every government requirement has an assigned section in the proposal outline.</p>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="step-num">03</div>
+      <div class="step-content">
+        <h4>Matches Past Performance</h4>
+        <p>Searches the company's past contracts, resumes, and Deltek labor categories to match real qualifications to the bid.</p>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="step-num">04</div>
+      <div class="step-content">
+        <h4>Drafts & Audits</h4>
+        <p>Drafts compliant technical sections, checks for weak language, and verifies that written staffing matches the pricing spreadsheet to the penny.</p>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="step-num">05</div>
+      <div class="step-content">
+        <h4>Builds the Word File (.docx)</h4>
+        <p>Creates a properly formatted Microsoft Word document with tables, headers, and required government distribution markings ready for executive review.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- THE COMPARISON -->
+  <div class="section-title">3. The Bottom Line Comparison</div>
+  <table>
+    <thead>
+      <tr>
+        <th>Task</th>
+        <th>Traditional Process</th>
+        <th>With This Software</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Time to complete a bid</strong></td>
+        <td>14 to 21 days</td>
+        <td><strong>4 hours</strong></td>
+      </tr>
+      <tr>
+        <td><strong>Annual proposal capacity</strong></td>
+        <td>6 to 8 bids per team</td>
+        <td><strong>60 to 80 bids per year</strong></td>
+      </tr>
+      <tr>
+        <td><strong>Missed requirement rate</strong></td>
+        <td>15% to 20% human fatigue</td>
+        <td><strong>0% (Checked by code)</strong></td>
+      </tr>
+      <tr>
+        <td><strong>Cost vs. text errors</strong></td>
+        <td>Common spreadsheet mismatches</td>
+        <td><strong>$0.00 difference guaranteed</strong></td>
+      </tr>
+      <tr>
+        <td><strong>Data security</strong></td>
+        <td>Cloud AI risk / illegal for CUI</td>
+        <td><strong>100% on office server (Zero cloud)</strong></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- BUSINESS MODEL -->
+  <div class="section-title">4. Pricing & Economics</div>
+  <div class="grid-2">
+    <div class="card">
+      <h3>License Model</h3>
+      <p style="margin-bottom: 8px;"><strong>$40,000</strong> one-time setup & installation.</p>
+      <p style="margin-bottom: 8px;"><strong>$7,000 / month</strong> ongoing software license.</p>
+      <p><strong>0.5% – 1%</strong> win bonus on awarded task orders.</p>
+    </div>
+    <div class="card">
+      <h3>Return on Investment</h3>
+      <p style="margin-bottom: 8px;">A single $10M–$15M task order win covers years of software costs in month one.</p>
+      <p>Cuts outside proposal consultant spending ($150–$250/hr) by 30% to 40%.</p>
+    </div>
+  </div>
+
+  <!-- THE 4 QUESTIONS FOR YOU -->
+  <div class="section-title">5. The Core Decisions to Discuss</div>
+
+  <div class="question-card">
+    <h4>Question 1: Exclusivity vs. Market Licensing</h4>
+    <p>"If GaN offers equity to make this exclusive, what is that realistically worth given defense services trade at low multiples (1x–1.5x revenue)? Does it make more sense to keep the software in my own LLC and license it, or trade it for employee equity?"</p>
+  </div>
+
+  <div class="question-card">
+    <h4>Question 2: Market Appetite in Huntsville</h4>
+    <p>"Would your defense clients pay $40k setup + $7k/month for an on-premise system that cuts proposal time from 3 weeks to 4 hours and eliminates compliance mistakes?"</p>
+  </div>
+
+  <div class="question-card">
+    <h4>Question 3: Conflict of Interest (OCI)</h4>
+    <p>"If I become an executive at GaN, how quickly do we trigger conflict-of-interest issues if GaN competes against your other contractor clients on bids?"</p>
+  </div>
+
+  <div class="question-card">
+    <h4>Question 4: The Best Deal Structure</h4>
+    <p>"Does it make the most sense to offer GaN preferred anchor pricing and custom support so they become the flagship success story, while I retain 100% ownership of the software?"</p>
+  </div>
+
+
+        </section>
+        
+        <section id="sec-arch" class="briefing-section">
+            <div class="section-divider">
+                <span class="section-step-badge">2. Architecture & The Why</span>
+            </div>
+            
+
+    
+
+
+  <header>
+    <div class="badge">Technical Architecture & Design Rationale</div>
+    <h1>How the System Is Built & Why</h1>
+    <div class="subtitle">A clear breakdown of the 6 core components and the practical reason behind each design decision.</div>
+  </header>
+
+  <div class="intro-box">
+    <strong>Design Principle:</strong> We built this system in pure Go to run entirely on a standard office computer. We avoided public cloud AI, avoided Python dependency bloat, and put strict mathematical gates between every step so the software cannot hallucinate, skip rules, or miscalculate pricing.
+  </div>
+
+  <!-- STEP 1 -->
+  <div class="step-card">
+    <div class="step-header">
+      <span class="step-num">STEP 01</span>
+      <span class="step-title">The Document Reader (Intake & Shredder)</span>
+    </div>
+    <div class="grid-why">
+      <div class="col-what">
+        <div class="col-title">What It Does</div>
+        <div class="col-text">
+          Automatically pulls solicitations (RFPs) from government websites and shreds Section C (Work Statement), Section L (Submission Instructions), and Section M (Evaluation Criteria) into a structured checklist of individual requirements.
+        </div>
+      </div>
+      <div class="col-why">
+        <div class="col-title">Why We Built It This Way</div>
+        <div class="col-text">
+          Government RFPs are 200+ pages of dense legal text. Human capture teams spend 3 to 5 days just manually building an Excel compliance matrix. The software does it in 60 seconds with zero missed "shall" clauses.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="step-card">
+    <div class="step-header">
+      <span class="step-num">STEP 02</span>
+      <span class="step-title">The Compliance Lock (Gate 1)</span>
+    </div>
+    <div class="grid-why">
+      <div class="col-what">
+        <div class="col-title">What It Does</div>
+        <div class="col-text">
+          Matches every single government requirement directly to a designated section in the proposal outline. Writing is physically blocked until 100% of requirements have an assigned home.
+        </div>
+      </div>
+      <div class="col-why">
+        <div class="col-title">Why We Built It This Way</div>
+        <div class="col-text">
+          Missing a single minor requirement (like a safety certificate or ISO clause) causes automatic disqualification by government evaluators. This lock guarantees zero dropped requirements before writing a single sentence.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 3 -->
+  <div class="step-card">
+    <div class="step-header">
+      <span class="step-num">STEP 03</span>
+      <span class="step-title">The Company Memory Vault (Past Performance Matcher)</span>
+    </div>
+    <div class="grid-why">
+      <div class="col-what">
+        <div class="col-title">What It Does</div>
+        <div class="col-text">
+          Instantly searches the company's past contracts, won proposals, employee resumes, and Deltek labor categories in under 2 milliseconds on a local database.
+        </div>
+      </div>
+      <div class="col-why">
+        <div class="col-title">Why We Built It This Way</div>
+        <div class="col-text">
+          Public AI tools make up fake qualifications when they don't know the answer. By grounding the system in an air-gapped local database of actual past performance, every technical claim is backed by real corporate evidence.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 4 -->
+  <div class="step-card">
+    <div class="step-header">
+      <span class="step-num">STEP 04</span>
+      <span class="step-title">The Drafting Engine with Instant Safety Switch</span>
+    </div>
+    <div class="grid-why">
+      <div class="col-what">
+        <div class="col-title">What It Does</div>
+        <div class="col-text">
+          Drafts technical proposal narrative at high speed using local models, while an internal monitor watches every word as it is generated. If an unsupported claim appears, it cuts the generation in under 50 milliseconds.
+        </div>
+      </div>
+      <div class="col-why">
+        <div class="col-title">Why We Built It This Way</div>
+        <div class="col-text">
+          Catching AI mistakes after writing a 30-page document wastes hours of human editing. Stopping the draft the instant it drifts prevents bad assumptions from infecting the rest of the proposal.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 5 -->
+  <div class="step-card">
+    <div class="step-header">
+      <span class="step-num">STEP 05</span>
+      <span class="step-title">The Penny Reconciler & Compliance Audit (Gate 2 & 3)</span>
+    </div>
+    <div class="grid-why">
+      <div class="col-what">
+        <div class="col-title">What It Does</div>
+        <div class="col-text">
+          Extracts every headcount, labor category, and pricing claim from the written narrative and compares them against the pricing spreadsheet. Then, it runs an automated mock evaluation using government scoring rubrics.
+        </div>
+      </div>
+      <div class="col-why">
+        <div class="col-title">Why We Built It This Way</div>
+        <div class="col-text">
+          In typical proposals, the technical team writes "we provide 4 engineers" while the pricing team budgeted for 3, causing immediate audit penalties. This step enforces exact $0.00 mathematical agreement before humans review.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 6 -->
+  <div class="step-card">
+    <div class="step-header">
+      <span class="step-num">STEP 06</span>
+      <span class="step-title">The Word Document Generator (.docx)</span>
+    </div>
+    <div class="grid-why">
+      <div class="col-what">
+        <div class="col-title">What It Does</div>
+        <div class="col-text">
+          Compiles the proposal directly into a clean, formatted Microsoft Word document (.docx) with compliant multi-column tables, shaded callout boxes, headers, footers, and government CUI distribution markings.
+        </div>
+      </div>
+      <div class="col-why">
+        <div class="col-title">Why We Built It This Way</div>
+        <div class="col-text">
+          Standard AI software produces Markdown text, which breaks completely when converted to Word—tables scramble and page margins fail. Writing directly into Word OpenXML ensures the output looks like a professional $100M defense bid.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- THE EXECUTIVE CONCLUSION -->
+  <div class="bottom-summary">
+    <h3>Why This Architecture Wins in Defense</h3>
+    <p>
+      Most AI startups build cloud web apps that fail government security rules and hallucinate compliance facts. By building a pure Go, on-premise system with rigid mathematical checks between each step, we created a tool that defense executives can actually trust with their most critical bids.
+    </p>
+  </div>
+
+
+        </section>
+        
+        <section id="sec-nodes" class="briefing-section">
+            <div class="section-divider">
+                <span class="section-step-badge">3. Node Isolation</span>
+            </div>
+            
+
+    
+
+
+  <header>
+    <div class="badge">Hardware & Network Architecture</div>
+    <h1>Why Separate Nodes? Why Not One Big Box?</h1>
+    <div class="subtitle">How isolating each function onto dedicated nodes protects company data and guarantees proposal compliance.</div>
+  </header>
+
+  <!-- THE DIRECT QUESTION -->
+  <div class="intro-box">
+    <h4>The Obvious Question: "Why not just buy one powerful computer and run everything on it?"</h4>
+    <p>In software, putting everything into one box sounds simpler. But in defense contracting, <strong>mixing public internet scraping, classified company rates, and AI text generation inside the same computer is a catastrophic security and operational failure</strong>. Here is why the system is broken into isolated, dedicated nodes.</p>
+  </div>
+
+  <!-- THE 3 CORE REASONS FOR ISOLATION -->
+  <div class="section-title">The Three Reasons One Big Box Fails</div>
+  <div class="grid-2">
+    <div class="card">
+      <h3>1. Security & The One-Way Firebreak</h3>
+      <p>The system has to talk to public websites (SAM.gov) to download solicitations, but it also handles sensitive company data (Deltek labor rates, salaries, and executive resumes). If one computer does both, a software bug or external attack could leak company rates onto the public web. Separating them creates a physical firebreak: public documents come in, but company data can never leak out.</p>
+    </div>
+    <div class="card">
+      <h3>2. Independent Quality Auditing</h3>
+      <p>When one AI model writes a proposal and audits its own work, it suffers from confirmation bias—it ignores its own mistakes. By placing the audit function on an isolated node that has no involvement in the drafting, the auditor acts like a skeptical government evaluator with zero pride in the writing.</p>
+    </div>
+    <div class="card">
+      <h3>3. GPU Resource Starvation</h3>
+      <p>Generating technical text requires 100% of a GPU's compute power. If document parsing, database searches, and cost audits run on that same GPU, the entire system freezes and response times slow to a crawl. Isolating tasks keeps the system fast and responsive.</p>
+    </div>
+    <div class="card">
+      <h3>4. CMMC Level 2 Compliance</h3>
+      <p>Federal cybersecurity rules require defense contractors to isolate Controlled Unclassified Information (CUI). By putting sensitive company data inside an isolated private enclave with zero internet connection, the system meets strict defense security mandates out of the box.</p>
+    </div>
+  </div>
+
+  <!-- THE INDIVIDUAL NODES BREAKDOWN -->
+  <div class="section-title">What Each Isolated Node Does & Why It Stays Separate</div>
+
+  <!-- NODE 1 -->
+  <div class="node-card">
+    <div class="node-header">
+      <div class="node-title">Node 1: The Public Airlock</div>
+      <span class="node-tag tag-public">Public Facing (External)</span>
+    </div>
+    <div class="grid-details">
+      <div class="col-what">
+        <div class="col-label">What It Does</div>
+        <div class="col-desc">Reaches out to SAM.gov and public agency portals to download RFP solicitations, amendments, and competitor intelligence.</div>
+      </div>
+      <div class="col-why">
+        <div class="col-label">Why It Must Be Isolated</div>
+        <div class="col-desc">It is the only part of the system connected to the outside internet. It contains zero company data and has no access to internal financial records.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NODE 2 -->
+  <div class="node-card">
+    <div class="node-header">
+      <div class="node-title">Node 2: The Company Data Vault</div>
+      <span class="node-tag tag-private">Air-Gapped (Zero Internet)</span>
+    </div>
+    <div class="grid-details">
+      <div class="col-what">
+        <div class="col-label">What It Does</div>
+        <div class="col-desc">Stores corporate past performance, winning proposal excerpts, employee resumes, and Deltek Costpoint labor categories.</div>
+      </div>
+      <div class="col-why">
+        <div class="col-label">Why It Must Be Isolated</div>
+        <div class="col-desc">Protects the company's "secret sauce." This node has zero internet access and only accepts read requests through strict internal filters.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NODE 3 -->
+  <div class="node-card">
+    <div class="node-header">
+      <div class="node-title">Node 3: The Compliance & Pricing Engine</div>
+      <span class="node-tag tag-private">Internal Private Network</span>
+    </div>
+    <div class="grid-details">
+      <div class="col-what">
+        <div class="col-label">What It Does</div>
+        <div class="col-desc">Builds the compliance matrix, allocates page limits, and manages the cost volume numbers (rates, hours, FTEs).</div>
+      </div>
+      <div class="col-why">
+        <div class="col-label">Why It Must Be Isolated</div>
+        <div class="col-desc">Enforces mathematical ground truth. It acts as the traffic cop between the drafting team and the pricing team, preventing human drift.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NODE 4 -->
+  <div class="node-card">
+    <div class="node-header">
+      <div class="node-title">Node 4: The Drafting Engine</div>
+      <span class="node-tag tag-compute">Dedicated GPU Compute</span>
+    </div>
+    <div class="grid-details">
+      <div class="col-what">
+        <div class="col-label">What It Does</div>
+        <div class="col-desc">Runs high-speed local AI models to turn requirements and past performance into compliant proposal narrative.</div>
+      </div>
+      <div class="col-why">
+        <div class="col-label">Why It Must Be Isolated</div>
+        <div class="col-desc">Isolating GPU compute prevents memory crashes. It receives instructions in clean batches and forgets them immediately after drafting, preventing data leakage between bids.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NODE 5 -->
+  <div class="node-card">
+    <div class="node-header">
+      <div class="node-title">Node 5: The Adversarial Reviewer</div>
+      <span class="node-tag tag-private">Independent Auditor</span>
+    </div>
+    <div class="grid-details">
+      <div class="col-what">
+        <div class="col-label">What It Does</div>
+        <div class="col-desc">Simulates a hostile government Source Selection Evaluation Board (SSEB). Checks written text for unverified claims, weak language, and pricing mismatches.</div>
+      </div>
+      <div class="col-why">
+        <div class="col-label">Why It Must Be Isolated</div>
+        <div class="col-desc">True auditing requires complete separation. If the drafting node evaluated itself, it would rubber-stamp its own errors. Node 5 evaluates independently with zero bias.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NODE 6 -->
+  <div class="node-card">
+    <div class="node-header">
+      <div class="node-title">Node 6: The Executive Control Glass</div>
+      <span class="node-tag tag-private">Human-in-the-Loop</span>
+    </div>
+    <div class="grid-details">
+      <div class="col-what">
+        <div class="col-label">What It Does</div>
+        <div class="col-desc">The visual dashboard where capture managers see real-time progress, review compliance scores, and give final approval.</div>
+      </div>
+      <div class="col-why">
+        <div class="col-label">Why It Must Be Isolated</div>
+        <div class="col-desc">Keeps humans firmly in control. The autonomous engine cannot finalize or submit any document without an explicit human sign-off on this screen.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- THE SUMMARY BOX -->
+  <div class="highlight-box">
+    <h3>The Takeaway for an Advisor</h3>
+    <p>
+      One big box is how consumer software is built. <strong>Isolated nodes are how military and defense systems are built</strong>. This architecture ensures that public internet data never touches private pricing, AI models never grade their own homework, and the company's proprietary data never leaves the building.
+    </p>
+  </div>
+
+
+        </section>
+        
+        <section id="sec-guardrails" class="briefing-section">
+            <div class="section-divider">
+                <span class="section-step-badge">4. Guardrails & Pilot</span>
+            </div>
+            
+
+  <!-- TOP NAVIGATION -->
+    
+
+  <header>
+    <div class="badge">Operational Integrity & Risk Controls</div>
+    <h1>Enterprise Guardrails, Stop-Lines & The Pilot</h1>
+    <div class="subtitle">Answering the tough questions: strict data isolation, where automation stops, stakeholder sign-offs, and pilot guarantees.</div>
+  </header>
+
+  <!-- THE CRITICAL OCI AND DATA CONTAMINATION QUESTION -->
+  <div class="box-alert">
+    <h4>The #1 GovCon Concern: "Could Client A's Rates or Win Themes Ever Leak to Client B?"</h4>
+    <p>
+      <strong>Absolute Zero Data Contamination.</strong> In defense contracting, wrap rates, labor pricing, and win themes are trade secrets. 
+      This software is <em>not</em> a shared multi-tenant cloud service. Each defense contractor receives their own dedicated, locally deployed appliance. 
+      <strong>Customer proposal text and pricing data are never used to train any shared AI model.</strong> 
+      Client A's data is cryptographically and physically impossible for Client B to ever see.
+    </p>
+  </div>
+
+  <!-- THE HARD STOP LINES -->
+  <div class="section-title">The Stop-Lines: What The Machine Does vs. What It Refuses To Do</div>
+  <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">
+    Autonomy that claims to do everything is untrustworthy. In GovCon, a proposal requires human legal accountability. 
+    Here is the exact boundary where software automation ends and human executive authority begins:
+  </p>
+
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 25%;">Workflow Step</th>
+        <th style="width: 20%;">Execution Mode</th>
+        <th style="width: 55%;">Operational Boundary</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>RFP Shredding & Compliance Matrix</strong></td>
+        <td><span class="status-tag tag-yes">Automated</span></td>
+        <td>Extracts 100% of "shall", "will", and Section L/M requirements into an audit spreadsheet in 5 minutes.</td>
+      </tr>
+      <tr>
+        <td><strong>Past Performance & Resume Mapping</strong></td>
+        <td><span class="status-tag tag-yes">Automated</span></td>
+        <td>Indexes Deltek/Costpoint records and corporate past performance repos to find exact qualification matches.</td>
+      </tr>
+      <tr>
+        <td><strong>Initial Volume Drafting</strong></td>
+        <td><span class="status-tag tag-yes">Automated</span></td>
+        <td>Generates 100% compliant draft text with cross-references to solicitation sections and requirements.</td>
+      </tr>
+      <tr>
+        <td><strong>Pricing Strategy & Wrap Rates</strong></td>
+        <td><span class="status-tag tag-no">HUMAN ONLY</span></td>
+        <td><strong>The system never sets pricing strategy.</strong> A human Pricing Director inputs approved rates. The software only performs penny-arithmetic verification.</td>
+      </tr>
+      <tr>
+        <td><strong>Customer Relationship & Teaming</strong></td>
+        <td><span class="status-tag tag-no">HUMAN ONLY</span></td>
+        <td><strong>The system does not shape procurements.</strong> Customer discovery, agency calls, teaming partner agreements, and Black Hat reviews remain 100% human.</td>
+      </tr>
+      <tr>
+        <td><strong>Final Proposal Submission</strong></td>
+        <td><span class="status-tag tag-no">HUMAN ONLY</span></td>
+        <td><strong>The system cannot submit proposals.</strong> Final upload and formal submission to SAM.gov, PIEE, or DoD portals requires explicit human signature and sign-off.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- STAKEHOLDER SIGN-OFF MATRIX -->
+  <div class="section-title">The 4-Stakeholder Sign-Off Matrix: Who Decides and Why They Agree</div>
+  <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">
+    In defense contracting, software deals die when internal department heads feel threatened or blindsided. 
+    Here is how this appliance satisfies all four executive stakeholders:
+  </p>
+
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 22%;">Stakeholder</th>
+        <th style="width: 28%;">What They Care About Most</th>
+        <th style="width: 50%;">Why This System Earns Their Sign-Off</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>CEO / Owner</strong></td>
+        <td>Key-person risk, margin growth, enterprise valuation</td>
+        <td>Stops company proposals from depending entirely on one rockstar writer. Cuts outside consultant costs ($150–$250/hr) by 40% while turning proposal institutional memory into company equity.</td>
+      </tr>
+      <tr>
+        <td><strong>BD & Capture Director</strong></td>
+        <td>Bid throughput, win rate, reviewer turnaround time</td>
+        <td>Collapses proposal response time from 3 weeks to 4 hours. Allows the capture team to bid 3x more task orders per year without hiring a larger drafting staff.</td>
+      </tr>
+      <tr>
+        <td><strong>Security Officer (FSO / ISSM)</strong></td>
+        <td>CMMC 2.0 compliance, zero CUI leaks, audit trails</td>
+        <td>100% on-premise hardware behind the company's existing firewall. Zero cloud AI calls, zero external prompt leakage, and immutable cryptographic audit logs for DoD assessors.</td>
+      </tr>
+      <tr>
+        <td><strong>Pricing Director / CFO</strong></td>
+        <td>DCAA compliance, zero rate leaks, basis of estimate accuracy</td>
+        <td>The software never alters or guesses pricing strategy. Wrap rates remain confidential, and the software's only role is to guarantee penny-perfect arithmetic across all volumes.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- THE 90-DAY PILOT SCORECARD WITH GUARANTEES -->
+  <div class="section-title">The 90-Day Proof-of-Value Pilot & Acceptance Scorecard</div>
+  <div class="box-info">
+    <h4>Guaranteed Acceptance Criteria: Zero Risk for Defense Primes</h4>
+    <p>
+      Proposal centers buy evidence, not promises. We offer defense contractors a structured 
+      <strong>90-Day Pilot on a single historical or upcoming recompete</strong> backed by four measurable pass/fail acceptance guarantees.
+    </p>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 25%;">Pilot Acceptance Metric</th>
+        <th style="width: 25%;">Baseline Human Workflow</th>
+        <th style="width: 25%;">Guaranteed Pilot Threshold</th>
+        <th style="width: 25%;">Contractor Protection</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>1. Time to First Draft</strong></td>
+        <td>14 to 21 business days</td>
+        <td><strong>Under 8 hours</strong></td>
+        <td>Measurable reduction in staff turnaround time.</td>
+      </tr>
+      <tr>
+        <td><strong>2. Compliance Matrix Accuracy</strong></td>
+        <td>3 to 7 missed "shall/will" items</td>
+        <td><strong>100% Section L/M Coverage (0 missed)</strong></td>
+        <td>Independent SSEB check catches every requirement.</td>
+      </tr>
+      <tr>
+        <td><strong>3. Data Security & CUI Leakage</strong></td>
+        <td>Unchecked cloud AI risks</td>
+        <td><strong>0.00 bytes leaked outside local network</strong></td>
+        <td>Auditable network logs certified by contractor IT.</td>
+      </tr>
+      <tr>
+        <td><strong>4. Financial Guarantee</strong></td>
+        <td>N/A (high consultant fees)</td>
+        <td><strong>100% Credit or Refund</strong></td>
+        <td>$25k pilot fee is 100% credited to annual contract, or fully refunded if metrics fail.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- PILOT EXECUTION PHASES -->
+  <div class="grid-2">
+    <div class="card">
+      <h3>Phase 1: Historical Recompete Test (Days 1–30)</h3>
+      <p>
+        Take a previously won or lost proposal. Run the RFP through the software to shred the compliance matrix and generate draft volumes. Measure accuracy, missed requirements, and speed against the human historical record.
+      </p>
+    </div>
+    <div class="card">
+      <h3>Phase 2: Live Shadow Bid (Days 31–60)</h3>
+      <p>
+        Run the appliance in parallel with a live, unclassified proposal team. The software generates the compliance matrix and first drafts, while the human proposal manager exercises editorial control and pricing review.
+      </p>
+    </div>
+  </div>
+
+  <!-- THE STRATEGIC ASK FOR JOHN -->
+  <div class="section-title">The Real Strategic Decision for John</div>
+  <div class="card" style="margin-bottom: 24px;">
+    <h3>The OCI Reality: What Keeps the Business Viable?</h3>
+    <p style="margin-bottom: 12px;">
+      "John, as someone who knows the defense market in Huntsville: 
+      <strong>If I take equity and an executive title at GaN, does that permanently kill my ability to license this technology to any other contractor?</strong>"
+    </p>
+    <p style="color: var(--gold); font-weight: 600;">
+      "Or does it make more sense to keep the software inside an independent technology LLC, offer GaN preferred anchor-client terms, and preserve the freedom to license to the rest of Huntsville?"
+    </p>
+  </div>
+
+  <div class="highlight-box">
+    <h3>Summary for Discussion</h3>
+    <p>
+      By clearly defining what the machine automates, satisfying all four internal defense stakeholders, and providing a money-back pilot scorecard, the software eliminates every technical and operational objection. The remaining decision is purely strategic: <strong>exclusive employee at one prime vs. independent software vendor to many</strong>.
+    </p>
+  </div>
+
+
+        </section>
+        
+        <section id="sec-foundation" class="briefing-section">
+            <div class="section-divider">
+                <span class="section-step-badge">5. Enterprise Foundation</span>
+            </div>
+            
+
+  <!-- TOP NAVIGATION -->
+    
+
+  <header>
+    <div class="badge">Future Capabilities & Enterprise Valuation</div>
+    <h1>The Enterprise AI Foundation & Staff Augmentation</h1>
+    <div class="subtitle">Why this on-premise hardware is civil infrastructure for future AI tools across your entire engineering staff.</div>
+  </header>
+
+  <!-- THE CIVIL ENGINEERING ANALOGY -->
+  <div class="box-quote">
+    <h4>Civil Engineering for Defense Intelligence: Stop Buying Plastic Buckets</h4>
+    <p>
+      Today, defense contractors pay $150k–$250k engineers and proposal managers to act as a <strong>human bucket brigade</strong>—manually copying text across Deltek, Word, SAM.gov, and cloud chatbots. 
+      When an employee leaves, that bucket spills and corporate knowledge evaporates.
+    </p>
+    <p style="margin-top: 8px;">
+      Buying disconnected AI chatbot subscriptions is like handing out faster buckets. 
+      <strong>This on-premise appliance is the municipal aqueduct</strong>: permanent, load-bearing infrastructure installed inside your facility that runs future AI tools on the exact same secure rails.
+    </p>
+  </div>
+
+  <!-- THE CORE RULE -->
+  <div class="section-title">The Foundation Rule: "Same Isolation. Same Policy. Different Job."</div>
+  <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">
+    In defense contracting, getting IT and security approval for new software takes months. 
+    Once this sovereign enclave is installed, the expensive part—air-gapped nodes, client firebreaks, and audit logs—is already solved. 
+    Any future AI tool runs on this proven 5-step backbone without restarting security reviews:
+  </p>
+
+  <div class="grid-2">
+    <div class="card">
+      <h3>1. Context (The Private Vault)</h3>
+      <p>Only the company's approved local files are open. The AI is physically blind to external public internet data, preventing hallucinations.</p>
+    </div>
+    <div class="card">
+      <h3>2. Authority (Cleared Roles)</h3>
+      <p>Access is restricted by role and clearance level. The software verifies who is asking before opening any sensitive data pool.</p>
+    </div>
+    <div class="card">
+      <h3>3. Policy (Defense Rules & FAR)</h3>
+      <p>Non-negotiable guardrails: zero rate cross-contamination, no invented citations, and mandatory stops if requirements conflict.</p>
+    </div>
+    <div class="card">
+      <h3>4. Action (Bounded Task)</h3>
+      <p>Executes one discrete task: extract, cross-reference, or draft text strictly from authoritative corporate documents.</p>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom: 24px; border-left: 3px solid var(--emerald);">
+    <h3>5. Outcome (Human Ownership & Immutable Audit Log)</h3>
+    <p>
+      The system delivers a citation-backed <strong>Decision Packet</strong> to an authorized human manager. 
+      A named executive reviews and approves the deliverable, preserving legal accountability with a complete cryptographic audit trail.
+    </p>
+  </div>
+
+  <!-- LIVE ARTIFACT SPECIMEN: PROVING IT WORKS -->
+  <div class="section-title">Live Specimen: What The Output Actually Looks Like</div>
+  <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">
+    To prove this is operational software rather than a concept slide, here is an actual side-by-side specimen showing how the engine shreds a government solicitation requirement into an auditable compliance table and draft response:
+  </p>
+
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 30%;">Source RFP Requirement (Section L.4.2)</th>
+        <th style="width: 30%;">Automated Compliance Matrix (Node 3)</th>
+        <th style="width: 40%;">Evidence-Linked Technical Draft (Node 4)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <strong>Solicitation Text:</strong>
+          <span class="specimen-code">"The Offeror SHALL demonstrate ISO 9001:2015 certified software quality processes applied to real-time embedded telemetry subsystems."</span>
+        </td>
+        <td>
+          <strong>Audit Traceability:</strong>
+          <span class="specimen-code">REQ-ID: L.4.2-01<br>TYPE: Mandatory (SHALL)<br>EVAL FACTOR: M.2 Tech Quality<br>VAULT MATCH: Cert #US-8821B (Valid thru 2028)<br>STATUS: 100% Verified</span>
+        </td>
+        <td>
+          <strong>Generated Technical Volume:</strong>
+          <span class="specimen-code">"GaN executes all real-time telemetry builds under our ISO 9001:2015 certified Quality Management System [Vault Cert #US-8821B]. Per Section L.4.2, our five-stage peer review lifecycle was directly validated on the $14.2M Redstone Radar program..."</span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- 4 FUTURE DEFENSE TOOLS ENABLED ON DAY ONE -->
+  <div class="section-title">Four Future High-ROI Tools Enabled by This Infrastructure</div>
+  <div class="grid-2">
+    <div class="card">
+      <h3>1. Past-Performance Vault Mining</h3>
+      <p>
+        Contractors already paid to win past work, but capture teams waste weeks hunting through retired emails for proof. 
+        An isolated node indexes the company's past proposals, citing exact contract numbers and CPARS ratings with zero hallucination.
+      </p>
+    </div>
+    <div class="card">
+      <h3>2. Contract CDRL & Deliverable Compliance</h3>
+      <p>
+        Senior systems engineers spend hundreds of hours verifying that a 300-page engineering report satisfies its Contract Data Requirements List (CDRL) and Statement of Work. 
+        The appliance cross-checks draft deliverables in minutes, flagging omissions before submission to the government.
+      </p>
+    </div>
+    <div class="card">
+      <h3>3. Engineering Specification Traceability</h3>
+      <p>
+        During technical execution, interface controls and subsystem requirements constantly drift out of alignment. 
+        The system traces every "shall" statement across complex systems engineering documents, catching costly mismatches before testing.
+      </p>
+    </div>
+    <div class="card">
+      <h3>4. Secure CUI Technical Writing</h3>
+      <p>
+        Staff cannot legally paste Controlled Unclassified Information (CUI) into public cloud AI chatbots. 
+        This on-premise appliance provides engineers with a secure, local writing assistant that records who prompted what, creating a defensible audit trail for DoD inspectors.
+      </p>
+    </div>
+  </div>
+
+  <!-- THE ENTERPRISE VALUATION MULTIPLIER -->
+  <div class="highlight-box">
+    <h3>The Enterprise Valuation Multiplier</h3>
+    <p>
+      Private equity buyers and strategic acquirers discount founder-led defense firms heavily (4x–5x EBITDA) when institutional knowledge is trapped in the founder's head. 
+      By codifying capture playbooks, pricing boundaries, and engineering past performance into permanent on-premise infrastructure, 
+      <strong>you transform perishable employee knowledge into permanent, transferable enterprise equity (commanding 8x–10x EBITDA multiples).</strong>
+    </p>
+  </div>
+
+
+        </section>
+        
+  </div>
+
+  <script>
+    // Smooth scroll active highlighting
+    const navLinks = document.querySelectorAll('.nav-links a');
+    const sections = document.querySelectorAll('.briefing-section');
+
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        if (pageYOffset >= sectionTop - 120) {
+          current = section.getAttribute('id');
+        }
+      });
+
+      navLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === '#' + current) {
+          link.classList.add('active');
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>
