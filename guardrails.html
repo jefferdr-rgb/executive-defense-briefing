@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Enterprise Guardrails & The Pilot — Defense Proposal Software</title>
+<style>
+  :root {
+    --bg: #0b0f14;
+    --card: #141b22;
+    --card-border: #24303e;
+    --text: #f0f6fc;
+    --text-muted: #8b949e;
+    --gold: #f0daa5;
+    --emerald: #76d7a4;
+    --crimson: #ff7b72;
+    --cyan: #79c0ff;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --mono: "SF Mono", Menlo, Consolas, monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    line-height: 1.5;
+    padding: 32px 20px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  /* TOP NAVIGATION */
+  .nav-bar {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 28px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--card-border);
+    flex-wrap: wrap;
+  }
+
+  .nav-link {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-decoration: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1px solid transparent;
+    transition: all 0.15s ease;
+  }
+
+  .nav-link:hover {
+    color: var(--text);
+    border-color: var(--card-border);
+    background: var(--card);
+  }
+
+  .nav-link.active {
+    color: var(--gold);
+    border-color: rgba(240, 218, 165, 0.3);
+    background: rgba(240, 218, 165, 0.08);
+  }
+
+  header {
+    border-bottom: 1px solid var(--card-border);
+    padding-bottom: 24px;
+    margin-bottom: 32px;
+  }
+
+  .badge {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: rgba(240, 218, 165, 0.1);
+    color: var(--gold);
+    border: 1px solid rgba(240, 218, 165, 0.3);
+    padding: 3px 8px;
+    border-radius: 4px;
+    margin-bottom: 12px;
+  }
+
+  h1 {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+  }
+
+  .subtitle {
+    font-size: 15px;
+    color: var(--text-muted);
+  }
+
+  .section-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin: 32px 0 16px 0;
+    color: var(--gold);
+  }
+
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    padding: 20px;
+  }
+
+  .card h3 {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--text);
+  }
+
+  .card p {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  /* STOP LINES TABLE */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 28px;
+  }
+
+  th, td {
+    padding: 12px 16px;
+    text-align: left;
+    font-size: 13px;
+    border-bottom: 1px solid var(--card-border);
+  }
+
+  th {
+    background: #18222d;
+    font-weight: 700;
+    color: var(--gold);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  td strong { color: var(--text); }
+
+  .status-tag {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+
+  .tag-no { background: rgba(255, 123, 114, 0.15); color: var(--crimson); border: 1px solid #6e2723; }
+  .tag-yes { background: rgba(118, 215, 164, 0.15); color: var(--emerald); border: 1px solid #2e5942; }
+
+  /* CALLOUT BOXES */
+  .box-alert {
+    background: rgba(255, 123, 114, 0.08);
+    border-left: 3px solid var(--crimson);
+    padding: 18px 20px;
+    border-radius: 0 8px 8px 0;
+    margin-bottom: 24px;
+  }
+
+  .box-alert h4 {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--crimson);
+    margin-bottom: 6px;
+  }
+
+  .box-alert p {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  .box-info {
+    background: rgba(121, 192, 255, 0.08);
+    border-left: 3px solid var(--cyan);
+    padding: 18px 20px;
+    border-radius: 0 8px 8px 0;
+    margin-bottom: 24px;
+  }
+
+  .box-info h4 {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--cyan);
+    margin-bottom: 6px;
+  }
+
+  .box-info p {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  .highlight-box {
+    background: rgba(118, 215, 164, 0.08);
+    border-left: 3px solid var(--emerald);
+    padding: 18px 20px;
+    border-radius: 0 8px 8px 0;
+    margin-top: 32px;
+  }
+
+  .highlight-box h3 {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--emerald);
+    margin-bottom: 6px;
+  }
+
+  .highlight-box p {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  @media (max-width: 640px) {
+    .grid-2 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- TOP NAVIGATION -->
+  <nav class="nav-bar">
+    <a href="index.html" class="nav-link">1. Executive Summary</a>
+    <a href="architecture.html" class="nav-link">2. Architecture & The Why</a>
+    <a href="nodes.html" class="nav-link">3. Node Isolation</a>
+    <a href="guardrails.html" class="nav-link active">4. Guardrails & Pilot</a>
+  </nav>
+
+  <header>
+    <div class="badge">Operational Integrity & Risk Controls</div>
+    <h1>Enterprise Guardrails, Stop-Lines & The Pilot</h1>
+    <div class="subtitle">Answering the tough questions: strict data isolation, where automation stops, and how primes test it risk-free.</div>
+  </header>
+
+  <!-- THE CRITICAL OCI AND DATA CONTAMINATION QUESTION -->
+  <div class="box-alert">
+    <h4>The #1 GovCon Concern: "Could Client A's Rates or Win Themes Ever Leak to Client B?"</h4>
+    <p>
+      <strong>Absolute Zero Data Contamination.</strong> In defense contracting, wrap rates, labor pricing, and win themes are trade secrets. 
+      This software is <em>not</em> a shared multi-tenant cloud service. Each defense contractor receives their own dedicated, locally deployed appliance. 
+      <strong>Customer proposal text and pricing data are never used to train any shared AI model.</strong> 
+      Client A's data is cryptographically and physically impossible for Client B to ever see.
+    </p>
+  </div>
+
+  <!-- THE HARD STOP LINES -->
+  <div class="section-title">The Stop-Lines: What The Machine Does vs. What It Refuses To Do</div>
+  <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">
+    Autonomy that claims to do everything is untrustworthy. In GovCon, a proposal requires human legal accountability. 
+    Here is the exact boundary where software automation ends and human executive authority begins:
+  </p>
+
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 25%;">Workflow Step</th>
+        <th style="width: 20%;">Execution Mode</th>
+        <th style="width: 55%;">Operational Boundary</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>RFP Shredding & Compliance Matrix</strong></td>
+        <td><span class="status-tag tag-yes">Automated</span></td>
+        <td>Extracts 100% of "shall", "will", and Section L/M requirements into an audit spreadsheet in 5 minutes.</td>
+      </tr>
+      <tr>
+        <td><strong>Past Performance & Resume Mapping</strong></td>
+        <td><span class="status-tag tag-yes">Automated</span></td>
+        <td>Indexes Deltek/Costpoint records and corporate past performance repos to find exact qualification matches.</td>
+      </tr>
+      <tr>
+        <td><strong>Initial Volume Drafting</strong></td>
+        <td><span class="status-tag tag-yes">Automated</span></td>
+        <td>Generates 100% compliant draft text with cross-references to solicitation sections and requirements.</td>
+      </tr>
+      <tr>
+        <td><strong>Pricing Strategy & Wrap Rates</strong></td>
+        <td><span class="status-tag tag-no">HUMAN ONLY</span></td>
+        <td><strong>The system never sets pricing strategy.</strong> A human Pricing Director inputs approved rates. The software only performs penny-arithmetic verification.</td>
+      </tr>
+      <tr>
+        <td><strong>Customer Relationship & Teaming</strong></td>
+        <td><span class="status-tag tag-no">HUMAN ONLY</span></td>
+        <td><strong>The system does not shape procurements.</strong> Customer discovery, agency calls, teaming partner agreements, and Black Hat reviews remain 100% human.</td>
+      </tr>
+      <tr>
+        <td><strong>Final Proposal Submission</strong></td>
+        <td><span class="status-tag tag-no">HUMAN ONLY</span></td>
+        <td><strong>The system cannot submit proposals.</strong> Final upload and formal submission to SAM.gov, PIEE, or DoD portals requires explicit human signature and sign-off.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- THE 90-DAY PILOT -->
+  <div class="section-title">The 90-Day Proof-of-Value Pilot</div>
+  <div class="box-info">
+    <h4>Why a Pilot? Defense Contractors Buy Evidence, Not Promises</h4>
+    <p>
+      Proposal centers do not commit to six-figure enterprise contracts without proof. 
+      We offer defense primes a structured <strong>90-Day Disposable Pilot</strong> to run side-by-side against their traditional human proposal process on a representative solicitation.
+    </p>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <h3>Phase 1: Historical Recompete Test (Days 1–30)</h3>
+      <p>
+        Take a previously won or lost proposal. Run the RFP through the software to shred the compliance matrix and generate the initial draft volumes. Compare the machine's 4-hour output against the 3-week human output to measure accuracy, missed requirements, and time savings.
+      </p>
+    </div>
+    <div class="card">
+      <h3>Phase 2: Live Shadow Bid (Days 31–60)</h3>
+      <p>
+        Run the appliance in parallel with a live, unclassified proposal team. The software generates the compliance matrix and first drafts, while the human proposal manager exercises editorial control and pricing review.
+      </p>
+    </div>
+    <div class="card">
+      <h3>Phase 3: Color-Team Audit & Scoring (Days 61–90)</h3>
+      <p>
+        Measure actual hours saved, total consultant fee reductions, and compliance score improvements. If the software does not deliver at least a 50% reduction in drafting time with zero compliance errors, the contractor can walk away with zero further commitment.
+      </p>
+    </div>
+    <div class="card">
+      <h3>Pilot Terms & Commercials</h3>
+      <p>
+        <strong>Pilot Investment:</strong> $25,000 for full 90-day appliance deployment, on-site setup, and integration with local company past performance data. 
+        100% credited toward the annual enterprise license upon conversion.
+      </p>
+    </div>
+  </div>
+
+  <!-- THE STRATEGIC ASK FOR JOHN -->
+  <div class="section-title">The Real Strategic Decision for John</div>
+  <div class="card" style="margin-bottom: 24px;">
+    <h3>The OCI Reality: What Keeps the Business Viable?</h3>
+    <p style="margin-bottom: 12px;">
+      "John, as someone who knows the defense market in Huntsville: 
+      <strong>If I take equity and an executive title at GaN, does that permanently kill my ability to license this technology to any other contractor?</strong>"
+    </p>
+    <p style="color: var(--gold); font-weight: 600;">
+      "Or does it make more sense to keep the software inside an independent technology LLC, offer GaN preferred anchor-client terms, and preserve the freedom to license to the rest of Huntsville?"
+    </p>
+  </div>
+
+  <div class="highlight-box">
+    <h3>Summary for Discussion</h3>
+    <p>
+      By clearly separating what the machine automates from what humans own, providing absolute zero-data-leakage guarantees, and offering a risk-free 90-day pilot, the software eliminates every technical and operational objection. The remaining question is purely strategic: <strong>exclusive employee at one prime vs. independent software vendor to many</strong>.
+    </p>
+  </div>
+
+</body>
+</html>

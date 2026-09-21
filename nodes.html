@@ -202,9 +202,50 @@
   @media (max-width: 640px) {
     .grid-2, .grid-details { grid-template-columns: 1fr; }
   }
+
+  .nav-bar {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 28px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--card-border);
+    flex-wrap: wrap;
+  }
+
+  .nav-link {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-decoration: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1px solid transparent;
+    transition: all 0.15s ease;
+  }
+
+  .nav-link:hover {
+    color: var(--text);
+    border-color: var(--card-border);
+    background: var(--card);
+  }
+
+  .nav-link.active {
+    color: var(--gold);
+    border-color: rgba(240, 218, 165, 0.3);
+    background: rgba(240, 218, 165, 0.08);
+  }
+
 </style>
 </head>
 <body>
+
+  <nav class="nav-bar">
+    <a href="index.html" class="nav-link">1. Executive Summary</a>
+    <a href="architecture.html" class="nav-link">2. Architecture & The Why</a>
+    <a href="nodes.html" class="nav-link active">3. Node Isolation</a>
+    <a href="guardrails.html" class="nav-link">4. Guardrails & Pilot</a>
+  </nav>
+
 
   <header>
     <div class="badge">Hardware & Network Architecture</div>
