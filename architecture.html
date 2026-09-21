@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>System Architecture & The "Why" — Executive Briefing</title>
+<style>
+  :root {
+    --bg: #0b0f14;
+    --card: #141b22;
+    --card-border: #24303e;
+    --text: #f0f6fc;
+    --text-muted: #8b949e;
+    --gold: #f0daa5;
+    --emerald: #76d7a4;
+    --cyan: #79c0ff;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --mono: "SF Mono", Menlo, Consolas, monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    line-height: 1.5;
+    padding: 32px 20px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  header {
+    border-bottom: 1px solid var(--card-border);
+    padding-bottom: 24px;
+    margin-bottom: 32px;
+  }
+
+  .badge {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: rgba(240, 218, 165, 0.1);
+    color: var(--gold);
+    border: 1px solid rgba(240, 218, 165, 0.3);
+    padding: 3px 8px;
+    border-radius: 4px;
+    margin-bottom: 12px;
+  }
+
+  h1 {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+  }
+
+  .subtitle {
+    font-size: 15px;
+    color: var(--text-muted);
+  }
+
+  .intro-box {
+    background: rgba(121, 192, 255, 0.08);
+    border-left: 3px solid var(--cyan);
+    padding: 16px 18px;
+    border-radius: 0 6px 6px 0;
+    margin-bottom: 32px;
+    font-size: 14px;
+    color: var(--text);
+  }
+
+  .step-card {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    padding: 24px;
+    margin-bottom: 20px;
+    position: relative;
+  }
+
+  .step-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .step-num {
+    background: rgba(240, 218, 165, 0.15);
+    color: var(--gold);
+    font-family: var(--mono);
+    font-weight: 800;
+    font-size: 13px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    border: 1px solid rgba(240, 218, 165, 0.3);
+  }
+
+  .step-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .grid-why {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .col-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 4px;
+    font-family: var(--mono);
+  }
+
+  .col-what .col-title { color: var(--cyan); }
+  .col-why .col-title { color: var(--emerald); }
+
+  .col-text {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  .bottom-summary {
+    background: rgba(118, 215, 164, 0.08);
+    border-left: 3px solid var(--emerald);
+    padding: 20px;
+    border-radius: 0 8px 8px 0;
+    margin-top: 32px;
+  }
+
+  .bottom-summary h3 {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--emerald);
+    margin-bottom: 6px;
+  }
+
+  .bottom-summary p {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  @media (max-width: 640px) {
+    .grid-why { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+  <header>
+    <div class="badge">Technical Architecture & Design Rationale</div>
+    <h1>How the System Is Built & Why</h1>
+    <div class="subtitle">A clear breakdown of the 6 core components and the practical reason behind each design decision.</div>
+  </header>
+
+  <div class="intro-box">
+    <strong>Design Principle:</strong> We built this system in pure Go to run entirely on a standard office computer. We avoided public cloud AI, avoided Python dependency bloat, and put strict mathematical gates between every step so the software cannot hallucinate, skip rules, or miscalculate pricing.
+  </div>
+
+  <!-- STEP 1 -->
+  <div class="step-card">
+    <div class="step-header">
+      <span class="step-num">STEP 01</span>
+      <span class="step-title">The Document Reader (Intake & Shredder)</span>
+    </div>
+    <div class="grid-why">
+      <div class="col-what">
+        <div class="col-title">What It Does</div>
+        <div class="col-text">
+          Automatically pulls solicitations (RFPs) from government websites and shreds Section C (Work Statement), Section L (Submission Instructions), and Section M (Evaluation Criteria) into a structured checklist of individual requirements.
+        </div>
+      </div>
+      <div class="col-why">
+        <div class="col-title">Why We Built It This Way</div>
+        <div class="col-text">
+          Government RFPs are 200+ pages of dense legal text. Human capture teams spend 3 to 5 days just manually building an Excel compliance matrix. The software does it in 60 seconds with zero missed "shall" clauses.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="step-card">
+    <div class="step-header">
+      <span class="step-num">STEP 02</span>
+      <span class="step-title">The Compliance Lock (Gate 1)</span>
+    </div>
+    <div class="grid-why">
+      <div class="col-what">
+        <div class="col-title">What It Does</div>
+        <div class="col-text">
+          Matches every single government requirement directly to a designated section in the proposal outline. Writing is physically blocked until 100% of requirements have an assigned home.
+        </div>
+      </div>
+      <div class="col-why">
+        <div class="col-title">Why We Built It This Way</div>
+        <div class="col-text">
+          Missing a single minor requirement (like a safety certificate or ISO clause) causes automatic disqualification by government evaluators. This lock guarantees zero dropped requirements before writing a single sentence.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 3 -->
+  <div class="step-card">
+    <div class="step-header">
+      <span class="step-num">STEP 03</span>
+      <span class="step-title">The Company Memory Vault (Past Performance Matcher)</span>
+    </div>
+    <div class="grid-why">
+      <div class="col-what">
+        <div class="col-title">What It Does</div>
+        <div class="col-text">
+          Instantly searches the company's past contracts, won proposals, employee resumes, and Deltek labor categories in under 2 milliseconds on a local database.
+        </div>
+      </div>
+      <div class="col-why">
+        <div class="col-title">Why We Built It This Way</div>
+        <div class="col-text">
+          Public AI tools make up fake qualifications when they don't know the answer. By grounding the system in an air-gapped local database of actual past performance, every technical claim is backed by real corporate evidence.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 4 -->
+  <div class="step-card">
+    <div class="step-header">
+      <span class="step-num">STEP 04</span>
+      <span class="step-title">The Drafting Engine with Instant Safety Switch</span>
+    </div>
+    <div class="grid-why">
+      <div class="col-what">
+        <div class="col-title">What It Does</div>
+        <div class="col-text">
+          Drafts technical proposal narrative at high speed using local models, while an internal monitor watches every word as it is generated. If an unsupported claim appears, it cuts the generation in under 50 milliseconds.
+        </div>
+      </div>
+      <div class="col-why">
+        <div class="col-title">Why We Built It This Way</div>
+        <div class="col-text">
+          Catching AI mistakes after writing a 30-page document wastes hours of human editing. Stopping the draft the instant it drifts prevents bad assumptions from infecting the rest of the proposal.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 5 -->
+  <div class="step-card">
+    <div class="step-header">
+      <span class="step-num">STEP 05</span>
+      <span class="step-title">The Penny Reconciler & Compliance Audit (Gate 2 & 3)</span>
+    </div>
+    <div class="grid-why">
+      <div class="col-what">
+        <div class="col-title">What It Does</div>
+        <div class="col-text">
+          Extracts every headcount, labor category, and pricing claim from the written narrative and compares them against the pricing spreadsheet. Then, it runs an automated mock evaluation using government scoring rubrics.
+        </div>
+      </div>
+      <div class="col-why">
+        <div class="col-title">Why We Built It This Way</div>
+        <div class="col-text">
+          In typical proposals, the technical team writes "we provide 4 engineers" while the pricing team budgeted for 3, causing immediate audit penalties. This step enforces exact $0.00 mathematical agreement before humans review.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 6 -->
+  <div class="step-card">
+    <div class="step-header">
+      <span class="step-num">STEP 06</span>
+      <span class="step-title">The Word Document Generator (.docx)</span>
+    </div>
+    <div class="grid-why">
+      <div class="col-what">
+        <div class="col-title">What It Does</div>
+        <div class="col-text">
+          Compiles the proposal directly into a clean, formatted Microsoft Word document (.docx) with compliant multi-column tables, shaded callout boxes, headers, footers, and government CUI distribution markings.
+        </div>
+      </div>
+      <div class="col-why">
+        <div class="col-title">Why We Built It This Way</div>
+        <div class="col-text">
+          Standard AI software produces Markdown text, which breaks completely when converted to Word—tables scramble and page margins fail. Writing directly into Word OpenXML ensures the output looks like a professional $100M defense bid.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- THE EXECUTIVE CONCLUSION -->
+  <div class="bottom-summary">
+    <h3>Why This Architecture Wins in Defense</h3>
+    <p>
+      Most AI startups build cloud web apps that fail government security rules and hallucinate compliance facts. By building a pure Go, on-premise system with rigid mathematical checks between each step, we created a tool that defense executives can actually trust with their most critical bids.
+    </p>
+  </div>
+
+</body>
+</html>
