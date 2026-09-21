@@ -131,7 +131,7 @@
     line-height: 1.5;
   }
 
-  /* STOP LINES TABLE */
+  /* TABLES */
   table {
     width: 100%;
     border-collapse: collapse;
@@ -244,17 +244,18 @@
 <body>
 
   <!-- TOP NAVIGATION -->
-  <nav class="nav-bar">
+    <nav class="nav-bar">
     <a href="index.html" class="nav-link">1. Executive Summary</a>
     <a href="architecture.html" class="nav-link">2. Architecture & The Why</a>
     <a href="nodes.html" class="nav-link">3. Node Isolation</a>
     <a href="guardrails.html" class="nav-link active">4. Guardrails & Pilot</a>
+    <a href="future-platform.html" class="nav-link">5. Enterprise Foundation</a>
   </nav>
 
   <header>
     <div class="badge">Operational Integrity & Risk Controls</div>
     <h1>Enterprise Guardrails, Stop-Lines & The Pilot</h1>
-    <div class="subtitle">Answering the tough questions: strict data isolation, where automation stops, and how primes test it risk-free.</div>
+    <div class="subtitle">Answering the tough questions: strict data isolation, where automation stops, stakeholder sign-offs, and pilot guarantees.</div>
   </header>
 
   <!-- THE CRITICAL OCI AND DATA CONTAMINATION QUESTION -->
@@ -317,40 +318,104 @@
     </tbody>
   </table>
 
-  <!-- THE 90-DAY PILOT -->
-  <div class="section-title">The 90-Day Proof-of-Value Pilot</div>
+  <!-- STAKEHOLDER SIGN-OFF MATRIX -->
+  <div class="section-title">The 4-Stakeholder Sign-Off Matrix: Who Decides and Why They Agree</div>
+  <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">
+    In defense contracting, software deals die when internal department heads feel threatened or blindsided. 
+    Here is how this appliance satisfies all four executive stakeholders:
+  </p>
+
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 22%;">Stakeholder</th>
+        <th style="width: 28%;">What They Care About Most</th>
+        <th style="width: 50%;">Why This System Earns Their Sign-Off</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>CEO / Owner</strong></td>
+        <td>Key-person risk, margin growth, enterprise valuation</td>
+        <td>Stops company proposals from depending entirely on one rockstar writer. Cuts outside consultant costs ($150–$250/hr) by 40% while turning proposal institutional memory into company equity.</td>
+      </tr>
+      <tr>
+        <td><strong>BD & Capture Director</strong></td>
+        <td>Bid throughput, win rate, reviewer turnaround time</td>
+        <td>Collapses proposal response time from 3 weeks to 4 hours. Allows the capture team to bid 3x more task orders per year without hiring a larger drafting staff.</td>
+      </tr>
+      <tr>
+        <td><strong>Security Officer (FSO / ISSM)</strong></td>
+        <td>CMMC 2.0 compliance, zero CUI leaks, audit trails</td>
+        <td>100% on-premise hardware behind the company's existing firewall. Zero cloud AI calls, zero external prompt leakage, and immutable cryptographic audit logs for DoD assessors.</td>
+      </tr>
+      <tr>
+        <td><strong>Pricing Director / CFO</strong></td>
+        <td>DCAA compliance, zero rate leaks, basis of estimate accuracy</td>
+        <td>The software never alters or guesses pricing strategy. Wrap rates remain confidential, and the software's only role is to guarantee penny-perfect arithmetic across all volumes.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- THE 90-DAY PILOT SCORECARD WITH GUARANTEES -->
+  <div class="section-title">The 90-Day Proof-of-Value Pilot & Acceptance Scorecard</div>
   <div class="box-info">
-    <h4>Why a Pilot? Defense Contractors Buy Evidence, Not Promises</h4>
+    <h4>Guaranteed Acceptance Criteria: Zero Risk for Defense Primes</h4>
     <p>
-      Proposal centers do not commit to six-figure enterprise contracts without proof. 
-      We offer defense primes a structured <strong>90-Day Disposable Pilot</strong> to run side-by-side against their traditional human proposal process on a representative solicitation.
+      Proposal centers buy evidence, not promises. We offer defense contractors a structured 
+      <strong>90-Day Pilot on a single historical or upcoming recompete</strong> backed by four measurable pass/fail acceptance guarantees.
     </p>
   </div>
 
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 25%;">Pilot Acceptance Metric</th>
+        <th style="width: 25%;">Baseline Human Workflow</th>
+        <th style="width: 25%;">Guaranteed Pilot Threshold</th>
+        <th style="width: 25%;">Contractor Protection</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>1. Time to First Draft</strong></td>
+        <td>14 to 21 business days</td>
+        <td><strong>Under 8 hours</strong></td>
+        <td>Measurable reduction in staff turnaround time.</td>
+      </tr>
+      <tr>
+        <td><strong>2. Compliance Matrix Accuracy</strong></td>
+        <td>3 to 7 missed "shall/will" items</td>
+        <td><strong>100% Section L/M Coverage (0 missed)</strong></td>
+        <td>Independent SSEB check catches every requirement.</td>
+      </tr>
+      <tr>
+        <td><strong>3. Data Security & CUI Leakage</strong></td>
+        <td>Unchecked cloud AI risks</td>
+        <td><strong>0.00 bytes leaked outside local network</strong></td>
+        <td>Auditable network logs certified by contractor IT.</td>
+      </tr>
+      <tr>
+        <td><strong>4. Financial Guarantee</strong></td>
+        <td>N/A (high consultant fees)</td>
+        <td><strong>100% Credit or Refund</strong></td>
+        <td>$25k pilot fee is 100% credited to annual contract, or fully refunded if metrics fail.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- PILOT EXECUTION PHASES -->
   <div class="grid-2">
     <div class="card">
       <h3>Phase 1: Historical Recompete Test (Days 1–30)</h3>
       <p>
-        Take a previously won or lost proposal. Run the RFP through the software to shred the compliance matrix and generate the initial draft volumes. Compare the machine's 4-hour output against the 3-week human output to measure accuracy, missed requirements, and time savings.
+        Take a previously won or lost proposal. Run the RFP through the software to shred the compliance matrix and generate draft volumes. Measure accuracy, missed requirements, and speed against the human historical record.
       </p>
     </div>
     <div class="card">
       <h3>Phase 2: Live Shadow Bid (Days 31–60)</h3>
       <p>
         Run the appliance in parallel with a live, unclassified proposal team. The software generates the compliance matrix and first drafts, while the human proposal manager exercises editorial control and pricing review.
-      </p>
-    </div>
-    <div class="card">
-      <h3>Phase 3: Color-Team Audit & Scoring (Days 61–90)</h3>
-      <p>
-        Measure actual hours saved, total consultant fee reductions, and compliance score improvements. If the software does not deliver at least a 50% reduction in drafting time with zero compliance errors, the contractor can walk away with zero further commitment.
-      </p>
-    </div>
-    <div class="card">
-      <h3>Pilot Terms & Commercials</h3>
-      <p>
-        <strong>Pilot Investment:</strong> $25,000 for full 90-day appliance deployment, on-site setup, and integration with local company past performance data. 
-        100% credited toward the annual enterprise license upon conversion.
       </p>
     </div>
   </div>
@@ -371,7 +436,7 @@
   <div class="highlight-box">
     <h3>Summary for Discussion</h3>
     <p>
-      By clearly separating what the machine automates from what humans own, providing absolute zero-data-leakage guarantees, and offering a risk-free 90-day pilot, the software eliminates every technical and operational objection. The remaining question is purely strategic: <strong>exclusive employee at one prime vs. independent software vendor to many</strong>.
+      By clearly defining what the machine automates, satisfying all four internal defense stakeholders, and providing a money-back pilot scorecard, the software eliminates every technical and operational objection. The remaining decision is purely strategic: <strong>exclusive employee at one prime vs. independent software vendor to many</strong>.
     </p>
   </div>
 
